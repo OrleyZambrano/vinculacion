@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensiones para tablets 7" y mayores (600dp de ancho mínimo) -->
+    
+    <!-- Espaciados aumentados para tablets -->
+    <dimen name="spacing_micro">6dp</dimen>
+    <dimen name="spacing_xsmall">8dp</dimen>
+    <dimen name="spacing_small">10dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_medium">20dp</dimen>
+    <dimen name="spacing_large">28dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+    <dimen name="spacing_xxlarge">48dp</dimen>
+    <dimen name="spacing_huge">64dp</dimen>
+
+    <!-- Padding de contenedores más generoso -->
+    <dimen name="container_padding_horizontal">48dp</dimen>
+    <dimen name="container_padding_vertical">32dp</dimen>
+    <dimen name="card_padding">24dp</dimen>
+    <dimen name="card_padding_large">28dp</dimen>
+
+    <!-- Tarjetas más grandes -->
+    <dimen name="card_corner_radius">24dp</dimen>
+    <dimen name="card_corner_radius_small">20dp</dimen>
+    <dimen name="card_corner_radius_large">28dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation_large">6dp</dimen>
+
+    <!-- Botones más grandes -->
+    <dimen name="button_corner_radius">20dp</dimen>
+    <dimen name="button_padding_vertical">18dp</dimen>
+    <dimen name="button_padding_horizontal">28dp</dimen>
+    <dimen name="button_min_height">56dp</dimen>
+
+    <!-- Íconos más grandes -->
+    <dimen name="icon_size_small">32dp</dimen>
+    <dimen name="icon_size_normal">40dp</dimen>
+    <dimen name="icon_size_medium">48dp</dimen>
+    <dimen name="icon_size_large">56dp</dimen>
+    <dimen name="icon_size_xlarge">64dp</dimen>
+
+    <!-- Imágenes más grandes -->
+    <dimen name="thumbnail_size">120dp</dimen>
+    <dimen name="banner_height">180dp</dimen>
+    <dimen name="carousel_height">380dp</dimen>
+
+    <!-- Elementos específicos -->
+    <dimen name="quick_action_card_width">240dp</dimen>
+    <dimen name="bottom_nav_height">80dp</dimen>
+    <dimen name="bottom_nav_margin_horizontal">48dp</dimen>
+    <dimen name="bottom_nav_margin_bottom">32dp</dimen>
+    <dimen name="bottom_nav_corner_radius">32dp</dimen>
+
+    <!-- Tamaños de texto aumentados -->
+    <dimen name="text_size_micro">12sp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_body">16sp</dimen>
+    <dimen name="text_size_title">18sp</dimen>
+    <dimen name="text_size_headline">28sp</dimen>
+
+    <!-- Márgenes -->
+    <dimen name="item_margin_bottom">20dp</dimen>
+    <dimen name="item_margin_small">16dp</dimen>
+</resources>

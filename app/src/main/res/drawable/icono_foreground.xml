@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <inset
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp">
+            <bitmap
+                android:src="@drawable/ic_launcher_final"
+                android:gravity="center"
+                android:antialias="true"
+                android:filter="true" />
+        </inset>
+    </item>
+</layer-list>

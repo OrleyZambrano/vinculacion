@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensiones para tablets en orientación horizontal -->
+    
+    <!-- Padding optimizado -->
+    <dimen name="container_padding_horizontal">64dp</dimen>
+    <dimen name="container_padding_vertical">24dp</dimen>
+    
+    <!-- Banner proporcional -->
+    <dimen name="banner_height">140dp</dimen>
+    
+    <!-- Carousel ajustado -->
+    <dimen name="carousel_height">300dp</dimen>
+    
+    <!-- Bottom nav espaciado -->
+    <dimen name="bottom_nav_margin_horizontal">64dp</dimen>
+    <dimen name="bottom_nav_margin_bottom">24dp</dimen>
+</resources>

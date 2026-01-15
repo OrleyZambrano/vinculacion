@@ -1,0 +1,64 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme - siempre modo claro -->
+    <style name="Base.Theme.Vinculacion" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Colores personalizados -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryVariant">@color/primary_color_dark</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorSecondary">@color/accent_color</item>
+        <item name="colorSecondaryVariant">@color/earth_brown</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Forzar fondo claro -->
+        <item name="android:windowBackground">@color/background_home</item>
+        <item name="colorSurface">@color/card_background</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_elevated</item>
+
+        <!-- Estados -->
+        <item name="colorError">@color/error_red</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Configuración de pantalla - NO ocupar barra de estado -->
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/primary_color</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+        
+        <!-- Tipografía mejorada -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.Vinculacion.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.Vinculacion.Headline2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Vinculacion.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Vinculacion.Body2</item>
+    </style>
+
+    <style name="Theme.Vinculacion" parent="Base.Theme.Vinculacion" />
+
+    <!-- Estilos de tipografía personalizados -->
+    <style name="TextAppearance.Vinculacion.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.Vinculacion.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">-0.005</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.Vinculacion.Body1" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <style name="TextAppearance.Vinculacion.Body2" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:letterSpacing">0.015</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+</resources>

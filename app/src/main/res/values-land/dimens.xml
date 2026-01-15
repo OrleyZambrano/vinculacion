@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensiones optimizadas para orientación horizontal (landscape) -->
+    
+    <!-- Reducir padding vertical para aprovechar espacio -->
+    <dimen name="container_padding_vertical">16dp</dimen>
+    
+    <!-- Banner más bajo en landscape -->
+    <dimen name="banner_height">100dp</dimen>
+    
+    <!-- Carousel ajustado para landscape -->
+    <dimen name="carousel_height">220dp</dimen>
+    
+    <!-- Bottom nav más compacto -->
+    <dimen name="bottom_nav_margin_bottom">16dp</dimen>
+</resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Espaciados base para móviles normales (4-6 pulgadas) -->
+    <dimen name="spacing_micro">4dp</dimen>
+    <dimen name="spacing_xsmall">6dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_normal">12dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">20dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+    <dimen name="spacing_xxlarge">32dp</dimen>
+    <dimen name="spacing_huge">48dp</dimen>
+
+    <!-- Padding de contenedores -->
+    <dimen name="container_padding_horizontal">24dp</dimen>
+    <dimen name="container_padding_vertical">24dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_padding_large">20dp</dimen>
+
+    <!-- Tamaños de tarjetas -->
+    <dimen name="card_corner_radius">20dp</dimen>
+    <dimen name="card_corner_radius_small">16dp</dimen>
+    <dimen name="card_corner_radius_medium">18dp</dimen>
+    <dimen name="card_corner_radius_large">24dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="card_elevation_large">4dp</dimen>
+
+    <!-- Tamaños de botones -->
+    <dimen name="button_corner_radius">16dp</dimen>
+    <dimen name="button_padding_vertical">14dp</dimen>
+    <dimen name="button_padding_horizontal">20dp</dimen>
+    <dimen name="button_min_height">48dp</dimen>
+
+    <!-- Tamaños de íconos -->
+    <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="icon_size_normal">32dp</dimen>
+    <dimen name="icon_size_medium">36dp</dimen>
+    <dimen name="icon_size_large">42dp</dimen>
+    <dimen name="icon_size_xlarge">48dp</dimen>
+
+    <!-- Tamaños de imágenes -->
+    <dimen name="thumbnail_size">90dp</dimen>
+    <dimen name="banner_height">120dp</dimen>
+    <dimen name="carousel_height">260dp</dimen>
+
+    <!-- Ancho de elementos específicos -->
+    <dimen name="quick_action_card_width">200dp</dimen>
+    <dimen name="bottom_nav_height">70dp</dimen>
+    <dimen name="bottom_nav_margin_horizontal">20dp</dimen>
+    <dimen name="bottom_nav_margin_bottom">20dp</dimen>
+    <dimen name="bottom_nav_corner_radius">28dp</dimen>
+    
+    <!-- Tamaños de texto (opcional, para escalar) -->
+    <dimen name="text_size_micro">10sp</dimen>
+    <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_title">16sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+
+    <!-- Márgenes entre items -->
+    <dimen name="item_margin_bottom">16dp</dimen>
+    <dimen name="item_margin_small">12dp</dimen>
+</resources>

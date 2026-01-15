@@ -1,0 +1,236 @@
+<resources>
+    <!-- Aplicación -->
+    <string name="app_name">Vinculación</string>
+
+    <!-- Pantalla principal -->
+    <string name="welcome_title">¡Bienvenido a Vinculación!</string>
+    <string name="welcome_subtitle">Conectando universidades con la comunidad</string>
+    <string name="home_content">Contenido del home aquí</string>
+
+    <!-- Navegación -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_categories">Aves</string>
+    <string name="nav_tours">Tours</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_profile">Perfil</string>
+
+    <!-- Mensajes -->
+    <string name="home_selected">Inicio seleccionado</string>
+    <string name="categories_selected">Categorías seleccionado</string>
+    <string name="tours_selected">Tours seleccionado</string>
+    <string name="map_selected">Mapa seleccionado</string>
+    <string name="profile_selected">Perfil seleccionado</string>
+
+    <!-- Resultados -->
+    <string name="no_results">No hay resultados</string>
+    <string name="search_hint">Buscar aves por nombre</string>
+    <string name="filters_label">Familias destacadas</string>
+    <string name="filter_all">Todas</string>
+    <string name="close_detail">Cerrar detalle</string>
+    <string name="detail_family_format">Familia: %1$s</string>
+    <string name="listen_audio">Escuchar audio</string>
+    <string name="opening_audio">Abriendo audio...</string>
+    <string name="play_audio">Reproducir audio</string>
+    <string name="pause_audio">Detener audio</string>
+    <string name="audio_loading">Cargando audio...</string>
+    <string name="audio_error">No se pudo reproducir el audio</string>
+    <string name="empty_aves">Aún no hay aves registradas. Vuelve más tarde.</string>
+    <string name="empty_filtered_aves">No se encontraron aves con los filtros aplicados.</string>
+    <string name="error_loading_aves">No se pudo cargar la información. Intenta de nuevo.</string>
+    <string name="home_welcome_title">Explora el corredor de aves</string>
+    <string name="home_welcome_subtitle">Descubre especies cercanas y planifica tu próxima salida</string>
+    <string name="home_recognition_hero_title">Reconoce aves al instante</string>
+    <string name="home_recognition_hero_body">Usa la cámara o el micrófono para obtener coincidencias al momento.</string>
+    <string name="home_recognition_photo_button">Capturar foto</string>
+    <string name="home_recognition_audio_button">Grabar audio</string>
+    <string name="home_top_aves_title">Aves más vistas</string>
+    <string name="home_quick_actions_title">Acciones rápidas</string>
+    <string name="home_categories_title">Categorías destacadas</string>
+    <string name="home_empty_carousel">Registra tus primeros avistamientos para ver estadísticas.</string>
+    <string name="home_empty_categories">Aún no hay categorías disponibles.</string>
+    <string name="home_carousel_indicator_description">Imagen %1$d del carrusel</string>
+    <string name="home_action_categories">Explorar aves</string>
+    <string name="home_action_categories_subtitle">Busca especies o identifícalas al instante</string>
+    <string name="home_action_tours">Buscar tours</string>
+    <string name="home_action_tours_subtitle">Confirma tu cupo incluso sin conexión</string>
+    <string name="home_action_map">Ver mapa</string>
+    <string name="home_action_map_subtitle">Revisa rutas y calor de avistamientos</string>
+    <string name="home_action_recognition">Reconocer ave</string>
+    <string name="home_action_recognition_subtitle">Captura foto o audio para identificar</string>
+    <string name="home_action_profile">Mi espacio</string>
+    <string name="home_action_profile_subtitle">Sincroniza tus datos y registros</string>
+    <string name="recognition_placeholder">El módulo de reconocimiento estará disponible tras completar la configuración.</string>
+    <string name="recognition_title">Reconocimiento de aves</string>
+    <string name="recognition_subtitle">Identifica una especie a partir de una foto o una grabación en formato WAV.</string>
+    <string name="recognition_pick_image">Analizar foto</string>
+    <string name="recognition_pick_image_hint">Selecciona una imagen clara del ave</string>
+    <string name="recognition_pick_audio">Analizar audio</string>
+    <string name="recognition_pick_audio_hint">Usa grabaciones WAV PCM de 16 bits</string>
+    <string name="recognition_capture_image">Tomar foto</string>
+    <string name="recognition_capture_image_hint">Abre la cámara y captura al ave en primer plano.</string>
+    <string name="recognition_capture_audio">Grabar audio en vivo</string>
+    <string name="recognition_capture_audio_hint">Inicia una grabación corta con el canto del ave.</string>
+    <string name="recognition_stop_recording">Detener grabación</string>
+    <string name="recognition_recording_status">Grabando… toca para detener (máx. %1$d s)</string>
+    <string name="recognition_gallery_image">Elegir foto de la galería</string>
+    <string name="recognition_gallery_audio">Importar audio existente</string>
+    <string name="recognition_selected_file">Archivo seleccionado: %1$s</string>
+    <string name="recognition_captured_image">Imagen capturada</string>
+    <string name="recognition_location_info">Ubicación donde se capturó</string>
+    <string name="recognition_empty_state">Aquí verás las mejores coincidencias cuando analices un archivo.</string>
+    <string name="recognition_disclaimer">Los registros se guardan offline y se sincronizarán automáticamente al reconectar.</string>
+    <string name="recognition_error_generic">No se pudo procesar el archivo. Inténtalo de nuevo.</string>
+    <string name="recognition_error_camera_permission">Se requiere permiso de cámara para capturar una foto.</string>
+    <string name="recognition_error_audio_permission">Se requiere permiso de micrófono para grabar audio.</string>
+    <string name="recognition_error_audio_recording">No se pudo iniciar la grabación de audio.</string>
+    <string name="birds_header_title">Encuentra y reconoce aves</string>
+    <string name="birds_header_body">Explora la guía, registra nuevos hallazgos o identifica una especie con la cámara o el micrófono.</string>
+    <string name="birds_hero_photo_button">Capturar foto</string>
+    <string name="birds_hero_audio_button">Grabar audio</string>
+    <string name="birds_hero_gallery_button">Elegir de la galería</string>
+    <string name="birds_map_button">Ver mapa de avistamientos</string>
+    <string name="birds_filters_title">Filtra por familia</string>
+    <string name="birds_hero_dismiss">Ocultar recomendaciones</string>
+    <string name="recognition_saved_record">Registro guardado para sincronización.</string>
+    <string name="recognition_notes">Nota del modelo: %1$s</string>
+    <string name="recognition_confidence_value">%1$d%%</string>
+    <string name="recognition_source_audio">Audio · %1$s</string>
+    <string name="recognition_source_image">Imagen · %1$s</string>
+    <string name="placeholder_tours">Pronto podrás gestionar tours guiados, ver grupos disponibles y confirmar asistencia incluso sin conexión.</string>
+    <string name="placeholder_map">Estamos preparando un mapa interactivo con rutas y calor de avistamientos para tu próxima aventura.</string>
+    <string name="placeholder_profile">Completa tu perfil para sincronizar registros y acceder a funciones avanzadas.</string>
+    <string name="map_route_empty">Ruta no disponible</string>
+    <string name="map_heatmap_empty">Sin registros geolocalizados</string>
+    <string name="tours_empty_title">Sin tours disponibles</string>
+    <string name="tours_empty_subtitle">Sincroniza o crea un nuevo recorrido para comenzar</string>
+    <string name="tours_create_button">Crear nuevo tour</string>
+    <string name="tour_create_title">Crear Nuevo Tour</string>
+    <string name="tour_create_title_hint">Título del tour</string>
+    <string name="tour_create_description_hint">Descripción del recorrido</string>
+    <string name="tour_create_date_hint">Fecha y hora</string>
+    <string name="tour_create_location_hint">Punto de encuentro</string>
+    <string name="tour_create_capacity_hint">Cupo máximo (participantes)</string>
+    <string name="tour_create_contact_info">Información de Contacto</string>
+    <string name="tour_create_phone_hint">WhatsApp (incluye código de país)</string>
+    <string name="tour_create_phone_info">Los participantes podrán contactarte por WhatsApp para consultas</string>
+    <string name="tour_create_button">Crear Tour</string>
+    <string name="tour_create_cancel">Cancelar</string>
+    <string name="tour_create_success">Tour creado exitosamente</string>
+    <string name="tour_create_error">Error al crear el tour</string>
+    <string name="tour_action_request">Solicitar cupo</string>
+    <string name="tour_action_cancel">Cancelar solicitud</string>
+    <string name="tour_action_manage">Gestionar</string>
+    <string name="tour_action_approve">Aprobar</string>
+    <string name="tour_action_decline">Rechazar</string>
+    <string name="tour_status_pending">Solicitud pendiente</string>
+    <string name="tour_status_approved">Solicitud aprobada</string>
+    <string name="tour_status_declined">Solicitud rechazada</string>
+    <string name="tour_status_cancelled">Solicitud cancelada</string>
+    <string name="tour_status_guest_prompt">Registra tu perfil para solicitar un cupo</string>
+    <string name="tour_auth_prompt_title">Registra tu perfil offline</string>
+    <string name="tour_role_user">explorador</string>
+    <string name="tour_role_guide">guía</string>
+    <string name="tour_label_guide">Guía: %1$s</string>
+    <string name="tour_status_published">Disponible</string>
+    <string name="tour_status_in_progress">En curso</string>
+    <string name="tour_status_completed">Completado</string>
+    <string name="tour_status_cancelled_label">Cancelado</string>
+    <string name="tour_status_draft_label">Borrador</string>
+    <string name="tour_role_badge">Eres guía en este tour</string>
+    <string name="tour_manage_participants">Gestionar participantes</string>
+    <string name="tour_capacity_unlimited">Cupo ilimitado</string>
+    <string name="tour_capacity_value">%1$d lugares disponibles</string>
+    <string name="tour_join_success">Solicitud registrada para %1$s</string>
+    <string name="tour_cancel_success">Solicitud cancelada</string>
+    <string name="tour_error_duplicate">Ya existe una solicitud registrada para este tour</string>
+    <string name="tour_approve_success">Solicitud aprobada</string>
+    <string name="tour_decline_success">Solicitud rechazada</string>
+    <string name="tour_error_permission">No tienes permisos para gestionar este tour</string>
+    <string name="tour_error_generic">Ocurrió un error al procesar la acción</string>
+    <string name="tour_sign_out_success">Sesión cerrada</string>
+    <string name="tour_manage_pending_count">Solicitudes pendientes: %1$d</string>
+    <string name="tour_manage_empty">Sin solicitudes pendientes</string>
+    <string name="tour_email_link_button">Guardar</string>
+    <string name="tour_registration_pending_email">Cuando te conectes solicitaremos un correo para sincronizarte con las guías.</string>
+    <string name="tour_registration_error_first_name">Ingresa un nombre válido (mínimo 2 caracteres)</string>
+    <string name="tour_registration_error_last_name">Ingresa un apellido válido (mínimo 2 caracteres)</string>
+    <string name="tour_registration_error_username">Elige un usuario con letras, números o _.- (3 a 20 caracteres)</string>
+    <string name="tour_email_link_error">Ingresa un correo válido</string>
+    <string name="profile_guest_title">Perfil sin registrar</string>
+    <string name="profile_guest_body">Inicia sesión con Google para acceder a tours, mapas y sincronización.</string>
+    <string name="profile_email_missing">Sin correo vinculado</string>
+    <string name="profile_role_label">Rol</string>
+    <string name="profile_sign_out_button">Cerrar sesión</string>
+    <string name="profile_last_sign_in">Último acceso: %1$s</string>
+    <string name="profile_role_user_label">Explorador</string>
+    <string name="profile_role_guide_label">Guía</string>
+    <string name="profile_role_guest_label">Invitado</string>
+    <string name="profile_google_sign_in_button">Iniciar sesión con Google</string>
+    <string name="profile_google_sign_in_loading">Conectando…</string>
+    <string name="profile_google_sign_in_success">Sesión iniciada como %1$s</string>
+    <string name="profile_google_sign_in_error">No se pudo iniciar sesión con Google</string>
+    <string name="profile_google_sign_in_cancelled">Inicio de sesión cancelado</string>
+    <string name="profile_role_refresh_button">Actualizar rol</string>
+    <string name="profile_role_refresh_loading">Actualizando rol…</string>
+    <string name="profile_role_refresh_success">Rol sincronizado: %1$s</string>
+    <string name="profile_role_refresh_no_change">Tu rol ya está actualizado</string>
+    <string name="profile_role_refresh_error">No se pudo actualizar el rol</string>
+    <string name="tour_registration_success">Perfil guardado como %1$s</string>
+    <string name="tour_email_link_success">Correo vinculado correctamente</string>
+    
+    <!-- Guide Contact -->
+    <string name="tour_guide_contact">Contactar Guía</string>
+    <string name="tour_whatsapp_button">WhatsApp</string>
+    <string name="tour_whatsapp_message">Hola! Estoy interesado en el tour: %1$s. ¿Podrías darme más información?</string>
+    <string name="tour_guide_name">Guía: %1$s</string>
+    <string name="tour_guide_phone">Teléfono: %1$s</string>
+    <string name="tour_participants_count">%1$d participantes</string>
+    <string name="tour_join_request_button">Solicitar Unirse</string>
+    
+    <!-- Search and Filter -->
+    <string name="search_tours_hint">Buscar tours...</string>
+    <string name="filter_all_tours">Todos</string>
+    <string name="filter_my_tours">Mis Tours</string>
+    <string name="filter_available_tours">Disponibles</string>
+    <string name="filter_upcoming_tours">Próximos</string>
+    <string name="empty_tours_title">No hay tours</string>
+    <string name="empty_tours_message">No se encontraron tours con los filtros seleccionados</string>
+    <string name="no_tours_available">No hay tours disponibles</string>
+    
+    <!-- Participants Management -->
+    <string name="participants_statistics">Aprobados: %1$d | Pendientes: %2$d | Rechazados: %3$d</string>
+    <string name="participant_request_date">Solicitó: %1$s</string>
+    <string name="guide_contact_participant_message">Hola! Soy el guía del tour: %1$s. Te escribo para coordinar detalles.</string>
+    
+    <!-- Guide Dashboard -->
+    <string name="guide_dashboard_title">Dashboard de Guía</string>
+    <string name="guide_no_tours_title">No tienes tours creados</string>
+    <string name="guide_no_tours_message">Crea tu primer tour para comenzar a recibir participantes</string>
+    <string name="stats_active_tours">%1$d</string>
+    <string name="stats_total_participants">%1$d</string>
+    <string name="stats_tours_active">Tours Activos</string>
+    <string name="stats_participants_total">Participantes</string>
+
+    <!-- Weather -->
+    <string name="weather_conditions_title">Condiciones actuales</string>
+    <string name="weather_refresh">Actualizar clima</string>
+    <string name="weather_icon_description">Ícono del clima</string>
+    <string name="weather_temperature">%1$d°C</string>
+    <string name="weather_humidity">%1$d%%</string>
+    <string name="weather_wind">%1$d km/h</string>
+    <string name="weather_humidity_label">Humedad</string>
+    <string name="weather_wind_label">Viento</string>
+    <string name="weather_bird_activity">Actividad de aves</string>
+    <string name="error_loading_weather">No se pudo obtener el clima</string>
+    
+    <!-- Location Permissions -->
+    <string name="location_permission_title">Ubicación para clima</string>
+    <string name="location_permission_message">Vinculación usa tu ubicación para mostrarte:\n\n🌤️ Clima en tiempo real\n🐦 Condiciones ideales para observar aves\n📍 Contexto de tu zona de exploración\n\nNo compartimos tu ubicación con terceros.</string>
+    <string name="location_permission_allow">Permitir</string>
+    <string name="location_permission_deny">Ahora no</string>
+    <string name="location_permission_initial_message">Activa la ubicación para ver el clima y condiciones de observación</string>
+    <string name="location_permission_denied_message">Ubicación denegada. Actívala para ver clima en tiempo real</string>
+    <string name="location_permission_denied_permanently">Para ver el clima, activa los permisos de ubicación en Configuración</string>
+    <string name="location_permission_retry">Activar ubicación</string>
+    <string name="location_permission_settings">Ir a configuración</string>
+</resources>
