@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -52,6 +53,7 @@ class TourParticipantsBottomSheet : BottomSheetDialogFragment() {
                 contactParticipant(participant)
             }
         )
+        binding.participantsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.participantsRecyclerView.adapter = participantsAdapter
         binding.participantsTitle.text = tourTitle
         viewModel.refreshParticipants(tourId)

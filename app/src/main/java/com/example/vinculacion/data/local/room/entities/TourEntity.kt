@@ -27,6 +27,7 @@ data class TourEntity(
     @ColumnInfo(name = "punto_encuentro_lng") val meetingPointLng: Double?,
     @ColumnInfo(name = "capacidad_max") val capacity: Int?,
     @ColumnInfo(name = "precio_sugerido") val suggestedPrice: Double?,
+    @ColumnInfo(name = "ruta_id") val routeId: String?,
     @ColumnInfo(name = "ruta_geojson") val routeGeoJson: String?,
     @ColumnInfo(name = "notas_adicionales") val notes: String?,
     @ColumnInfo(name = "creado_en") val createdAt: Long = System.currentTimeMillis(),

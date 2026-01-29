@@ -110,12 +110,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.05">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@drawable/detail_card_background">
+                android:fillViewport="true"
+                android:maxHeight="520dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/detail_card_background">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -156,35 +162,88 @@
                     android:layout_marginTop="12dp" />
 
                 <TextView
-                    android:id="@+id/detailScientific"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="italic"
-                    android:textColor="@color/text_secondary"
+                    android:text="Características"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
                     android:layout_marginTop="12dp" />
 
-                <TextView
-                    android:id="@+id/detailFamily"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nombre científico"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/detailScientific"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="italic"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Familia"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="10dp" />
+
+                        <TextView
+                            android:id="@+id/detailFamily"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nombre en inglés"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="10dp" />
+
+                        <TextView
+                            android:id="@+id/detailEnglish"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="12dp" />
 
                 <TextView
                     android:id="@+id/detailDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:textColor="@color/text_primary" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/detailBadge"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/primary_color"
-                    app:chipBackgroundColor="@color/card_background" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/detailSoundButton"
@@ -196,7 +255,9 @@
                     android:drawableStart="@drawable/ic_audio"
                     android:gravity="center"
                     app:iconPadding="8dp" />
-            </LinearLayout>
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
         </com.google.android.material.card.MaterialCardView>
 

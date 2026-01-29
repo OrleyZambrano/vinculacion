@@ -9,18 +9,27 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vinculacion.R
+import com.example.vinculacion.MainActivity
+import com.example.vinculacion.data.model.GuideRoute
 import com.example.vinculacion.databinding.FragmentGuideDashboardBinding
 import com.example.vinculacion.ui.common.UiState
 import com.example.vinculacion.ui.tours.ToursAdapter
 import com.example.vinculacion.ui.tours.TourParticipantsBottomSheet
+import com.example.vinculacion.data.repository.AuthRepository
+import com.example.vinculacion.data.repository.RoutesRepository
+import com.example.vinculacion.ui.map.MapsViewModel
 import com.google.android.material.snackbar.Snackbar
+import android.widget.AutoCompleteTextView
+import android.widget.ArrayAdapter
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -30,20 +39,26 @@ class GuideDashboardFragment : Fragment() {
     private var _binding: FragmentGuideDashboardBinding? = null
     private val binding get() = _binding!!
     private val viewModel: GuideDashboardViewModel by viewModels()
+    private val mapsViewModel: MapsViewModel by activityViewModels()
+    private val routesRepository by lazy { RoutesRepository(requireContext()) }
+    private val authRepository by lazy { AuthRepository(requireContext()) }
 
     private val myToursAdapter = ToursAdapter(
         onPrimaryAction = { item ->
-            // Para guías: gestionar el tour (editar, cancelar, etc.)
-            showTourManagementOptions(item.tour)
-        },
-        onSecondaryAction = { item ->
-            // Ver participantes
+            // Para guías: ver participantes
             TourParticipantsBottomSheet.newInstance(item.tour.id, item.tour.title, item.tour.guideId)
                 .show(childFragmentManager, "tourParticipants")
+        },
+        onSecondaryAction = { item ->
+            // Sin acción adicional
         },
         onWhatsAppAction = { item ->
             // Los guías no necesitan contactarse a sí mismos
             Snackbar.make(binding.root, "Este es tu tour", Snackbar.LENGTH_SHORT).show()
+        },
+        onRouteAction = { item ->
+            mapsViewModel.setSelectedRouteGeoJson(item.tour.routeGeoJson)
+            (activity as? MainActivity)?.openMap()
         }
     )
 
@@ -133,9 +148,6 @@ class GuideDashboardFragment : Fragment() {
         binding.statsTotalParticipants.text = getString(R.string.stats_total_participants, totalParticipants)
     }
 
-    private fun showTourManagementOptions(tour: com.example.vinculacion.data.model.Tour) {
-        // TODO: Show dialog with tour management options (edit, cancel, view participants)
-    }
 
     private fun showCreateTourDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_create_tour, null)
@@ -144,6 +156,7 @@ class GuideDashboardFragment : Fragment() {
         val inputDescription = dialogView.findViewById<TextInputEditText>(R.id.inputTourDescription)
         val inputDate = dialogView.findViewById<TextInputEditText>(R.id.inputTourDate)
         val inputLocation = dialogView.findViewById<TextInputEditText>(R.id.inputTourLocation)
+        val inputRoute = dialogView.findViewById<AutoCompleteTextView>(R.id.inputTourRoute)
         val inputCapacity = dialogView.findViewById<TextInputEditText>(R.id.inputTourCapacity)
         val inputPhone = dialogView.findViewById<TextInputEditText>(R.id.inputGuidePhone)
         val createButton = dialogView.findViewById<MaterialButton>(R.id.tourCreateButton)
@@ -177,6 +190,21 @@ class GuideDashboardFragment : Fragment() {
             )
             datePickerDialog.datePicker.minDate = System.currentTimeMillis()
             datePickerDialog.show()
+        }
+
+        var selectedRoute: GuideRoute? = null
+        viewLifecycleOwner.lifecycleScope.launch {
+            val guideId = authRepository.authState.first().profile.id
+            routesRepository.syncFromRemote()
+            val routes = routesRepository.getRoutesByGuide(guideId)
+            val labels = listOf(getString(R.string.tour_create_route_none)) + routes.map { it.title }
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, labels)
+            inputRoute.setAdapter(adapter)
+            inputRoute.setText(getString(R.string.tour_create_route_none), false)
+            inputRoute.setOnItemClickListener { parent, _, position, _ ->
+                val label = parent.getItemAtPosition(position) as String
+                selectedRoute = routes.firstOrNull { it.title == label }
+            }
         }
 
         createButton.setOnClickListener {
@@ -216,7 +244,9 @@ class GuideDashboardFragment : Fragment() {
                     dateTime = dateTime,
                     meetingPoint = location,
                     capacity = capacity,
-                    guidePhone = phone
+                    guidePhone = phone,
+                    routeId = selectedRoute?.id,
+                    routeGeoJson = selectedRoute?.geoJson
                 )
                 dialog.dismiss()
             } catch (e: Exception) {

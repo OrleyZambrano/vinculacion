@@ -168,6 +168,15 @@
                 android:visibility="gone" />
         </LinearLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tourRouteAction"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="@string/tour_action_view_route"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/tourRequestStatus"
             android:layout_width="match_parent"

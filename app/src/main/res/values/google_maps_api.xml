@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Reemplaza el valor por tu clave real de Google Maps Platform -->
-    <string name="google_maps_key" translatable="false">YOUR_GOOGLE_MAPS_KEY</string>
+    <!-- La clave de Maps se define vía Gradle usando MAPS_API_KEY en local.properties o variable de entorno. -->
 </resources>

@@ -15,16 +15,23 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.vinculacion.R
+import com.example.vinculacion.MainActivity
+import com.example.vinculacion.data.model.GuideRoute
 import com.example.vinculacion.data.model.UserProfile
 import com.example.vinculacion.databinding.FragmentToursBinding
+import com.example.vinculacion.data.repository.RoutesRepository
+import com.example.vinculacion.ui.map.MapsViewModel
 import com.example.vinculacion.ui.common.UiState
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import android.widget.AutoCompleteTextView
+import android.widget.ArrayAdapter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -35,6 +42,8 @@ class ToursFragment : Fragment() {
     private var _binding: FragmentToursBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ToursViewModel by viewModels()
+    private val mapsViewModel: MapsViewModel by activityViewModels()
+    private val routesRepository by lazy { RoutesRepository(requireContext()) }
     
     private var currentSearchQuery = ""
     private var selectedFilters = mutableSetOf<String>()
@@ -55,6 +64,10 @@ class ToursFragment : Fragment() {
         },
         onWhatsAppAction = { item ->
             openWhatsApp(item.tour)
+        },
+        onRouteAction = { item ->
+            mapsViewModel.setSelectedRouteGeoJson(item.tour.routeGeoJson)
+            (activity as? MainActivity)?.openMap()
         }
     )
 
@@ -211,6 +224,7 @@ class ToursFragment : Fragment() {
         val inputDescription = dialogView.findViewById<TextInputEditText>(R.id.inputTourDescription)
         val inputDate = dialogView.findViewById<TextInputEditText>(R.id.inputTourDate)
         val inputLocation = dialogView.findViewById<TextInputEditText>(R.id.inputTourLocation)
+        val inputRoute = dialogView.findViewById<AutoCompleteTextView>(R.id.inputTourRoute)
         val inputCapacity = dialogView.findViewById<TextInputEditText>(R.id.inputTourCapacity)
         val inputPhone = dialogView.findViewById<TextInputEditText>(R.id.inputGuidePhone)
         val createButton = dialogView.findViewById<MaterialButton>(R.id.tourCreateButton)
@@ -245,6 +259,21 @@ class ToursFragment : Fragment() {
             )
             datePickerDialog.datePicker.minDate = System.currentTimeMillis()
             datePickerDialog.show()
+        }
+
+        var selectedRoute: GuideRoute? = null
+        viewLifecycleOwner.lifecycleScope.launch {
+            val guideId = viewModel.authState.value.profile.id
+            routesRepository.syncFromRemote()
+            val routes = routesRepository.getRoutesByGuide(guideId)
+            val labels = listOf(getString(R.string.tour_create_route_none)) + routes.map { it.title }
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, labels)
+            inputRoute.setAdapter(adapter)
+            inputRoute.setText(getString(R.string.tour_create_route_none), false)
+            inputRoute.setOnItemClickListener { parent, _, position, _ ->
+                val label = parent.getItemAtPosition(position) as String
+                selectedRoute = routes.firstOrNull { it.title == label }
+            }
         }
         
         createButton.setOnClickListener {
@@ -286,7 +315,9 @@ class ToursFragment : Fragment() {
                     dateTime = dateTime,
                     meetingPoint = location,
                     capacity = capacity,
-                    guidePhone = phone
+                    guidePhone = phone,
+                    routeId = selectedRoute?.id,
+                    routeGeoJson = selectedRoute?.geoJson
                 )
                 dialog.dismiss()
             } catch (e: Exception) {

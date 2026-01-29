@@ -2,6 +2,7 @@ package com.example.vinculacion.data.repository
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import android.util.Patterns
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -9,6 +10,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.vinculacion.BuildConfig
 import com.example.vinculacion.data.local.datastore.authDataStore
 import com.example.vinculacion.data.local.room.VinculacionDatabase
 import com.example.vinculacion.data.local.room.mappers.toDomain
@@ -17,9 +19,11 @@ import com.example.vinculacion.data.model.AuthState
 import com.example.vinculacion.data.model.UserAccount
 import com.example.vinculacion.data.model.UserProfile
 import com.example.vinculacion.data.model.UserRole
+import com.example.vinculacion.data.model.UserSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 import java.util.UUID
@@ -46,6 +50,7 @@ class AuthRepository(context: Context) {
     private val syncRepository = SyncRepository(appContext)
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
+    private val toursRepository = ToursRepository(appContext)
 
     val authState: Flow<AuthState> = dataStore.data
         .catch { emit(emptyPreferences()) }
@@ -55,6 +60,16 @@ class AuthRepository(context: Context) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val authResult = firebaseAuth.signInWithCredential(credential).await()
         val firebaseUser = authResult.user ?: throw IllegalStateException("No se pudo obtener la cuenta de Google")
+        val role = fetchAndEnsureRemoteRole(firebaseUser)
+        val profile = firebaseUser.toProfile(role)
+        persistProfile(profile)
+        dataStore.edit { prefs ->
+            prefs[KEY_LAST_SIGN_IN] = System.currentTimeMillis()
+        }
+        profile
+    }
+
+    suspend fun signInWithFirebaseUser(firebaseUser: FirebaseUser): UserProfile = withContext(Dispatchers.IO) {
         val role = fetchAndEnsureRemoteRole(firebaseUser)
         val profile = firebaseUser.toProfile(role)
         persistProfile(profile)
@@ -92,6 +107,94 @@ class AuthRepository(context: Context) {
         persistProfile(updated.toProfile())
     }
 
+    suspend fun updateProfileInfo(displayName: String, phone: String?): UserProfile = withContext(Dispatchers.IO) {
+        val current = authState.first().profile
+        if (current.isGuest) {
+            throw IllegalStateException("No hay sesión activa para actualizar")
+        }
+        val sanitizedName = displayName.cleanName()
+        val sanitizedPhone = phone?.trim()?.takeIf { it.isNotBlank() }
+        val updatedAccount = runCatching {
+            updateAccountIfExists { account ->
+                if (account.displayName == sanitizedName) account else account.copy(displayName = sanitizedName)
+            }
+        }.getOrNull()
+        val updatedProfile = (updatedAccount?.toProfile() ?: current)
+            .copy(displayName = sanitizedName, phone = sanitizedPhone)
+        persistProfile(updatedProfile)
+
+        val firebaseUser = firebaseAuth.currentUser
+        if (firebaseUser != null && firebaseUser.uid == updatedProfile.id) {
+            val updates = UserProfileChangeRequest.Builder()
+                .setDisplayName(updatedProfile.displayName)
+                .build()
+            firebaseUser.updateProfile(updates).await()
+        }
+
+        firestore.collection(FIRESTORE_USERS_COLLECTION)
+            .document(updatedProfile.id)
+            .set(
+                mapOf(
+                    "displayName" to updatedProfile.displayName,
+                    "phone" to updatedProfile.phone,
+                    "updatedAt" to System.currentTimeMillis()
+                ),
+                com.google.firebase.firestore.SetOptions.merge()
+            ).await()
+
+        if (updatedProfile.role.canManageTours()) {
+            toursRepository.updateGuideName(updatedProfile.id, updatedProfile.displayName)
+        }
+
+        updatedProfile
+    }
+
+    suspend fun getUserSettings(): UserSettings = withContext(Dispatchers.IO) {
+        val current = authState.first().profile
+        if (current.isGuest) return@withContext UserSettings.defaults()
+
+        val doc = firestore.collection(FIRESTORE_USERS_COLLECTION)
+            .document(current.id)
+            .get()
+            .await()
+
+        if (!doc.exists()) {
+            val defaults = UserSettings.defaults()
+            firestore.collection(FIRESTORE_USERS_COLLECTION)
+                .document(current.id)
+                .set(
+                    mapOf(
+                        "notificationsEnabled" to defaults.notificationsEnabled,
+                        "publicProfile" to defaults.publicProfile,
+                        "updatedAt" to System.currentTimeMillis()
+                    ),
+                    com.google.firebase.firestore.SetOptions.merge()
+                ).await()
+            return@withContext defaults
+        }
+
+        val notifications = doc.getBoolean("notificationsEnabled") ?: true
+        val publicProfile = doc.getBoolean("publicProfile") ?: true
+        UserSettings(notificationsEnabled = notifications, publicProfile = publicProfile)
+    }
+
+    suspend fun updateUserSettings(settings: UserSettings) = withContext(Dispatchers.IO) {
+        val current = authState.first().profile
+        if (current.isGuest) {
+            throw IllegalStateException("No hay sesión activa para actualizar")
+        }
+        firestore.collection(FIRESTORE_USERS_COLLECTION)
+            .document(current.id)
+            .set(
+                mapOf(
+                    "notificationsEnabled" to settings.notificationsEnabled,
+                    "publicProfile" to settings.publicProfile,
+                    "updatedAt" to System.currentTimeMillis()
+                ),
+                com.google.firebase.firestore.SetOptions.merge()
+            ).await()
+    }
+
     suspend fun refreshRoleFromCloud(): UserProfile? = withContext(Dispatchers.IO) {
         val firebaseUser = firebaseAuth.currentUser ?: return@withContext null
         val current = authState.first().profile
@@ -101,7 +204,9 @@ class AuthRepository(context: Context) {
         
         // Forzar obtención del rol actual desde Firebase
         val remoteRole = fetchRemoteRole(firebaseUser.uid)
-        println("DEBUG: Rol actual local: ${current.role}, Rol remoto de Firebase: $remoteRole")
+        if (BuildConfig.DEBUG) {
+            Log.d("AuthRepository", "Rol actual local: ${current.role}, Rol remoto de Firebase: $remoteRole")
+        }
         
         // Siempre actualizar el perfil para asegurar sincronización
         val updated = current.copy(role = remoteRole, needsSync = false)
@@ -191,28 +296,38 @@ class AuthRepository(context: Context) {
 
     private suspend fun fetchRemoteRole(userId: String): UserRole {
         return runCatching {
-            println("DEBUG: Obteniendo rol desde Firebase para usuario: $userId")
+            if (BuildConfig.DEBUG) {
+                Log.d("AuthRepository", "Obteniendo rol desde Firebase para usuario: $userId")
+            }
             val snapshot = firestore.collection(FIRESTORE_USERS_COLLECTION)
                 .document(userId)
                 .get()
                 .await()
             
             if (!snapshot.exists()) {
-                println("DEBUG: Documento de usuario no existe en Firebase")
+                if (BuildConfig.DEBUG) {
+                    Log.d("AuthRepository", "Documento de usuario no existe en Firebase")
+                }
                 return@runCatching UserRole.USUARIO
             }
             
             val remoteRole = snapshot.getString(FIRESTORE_ROLE_FIELD)
-            println("DEBUG: Rol obtenido de Firebase: '$remoteRole'")
+            if (BuildConfig.DEBUG) {
+                Log.d("AuthRepository", "Rol obtenido de Firebase: '$remoteRole'")
+            }
             
             remoteRole?.takeIf { it.isNotBlank() }
                 ?.uppercase(Locale.ROOT)
                 ?.let { roleString ->
-                    println("DEBUG: Intentando convertir rol: '$roleString'")
+                    if (BuildConfig.DEBUG) {
+                        Log.d("AuthRepository", "Intentando convertir rol: '$roleString'")
+                    }
                     UserRole.valueOf(roleString)
                 }
         }.getOrElse { error ->
-            println("DEBUG: Error obteniendo rol: ${error.message}")
+            if (BuildConfig.DEBUG) {
+                Log.d("AuthRepository", "Error obteniendo rol: ${error.message}")
+            }
             UserRole.USUARIO
         } ?: UserRole.USUARIO
     }

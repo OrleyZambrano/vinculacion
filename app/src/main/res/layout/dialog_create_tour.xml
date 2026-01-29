@@ -88,6 +88,23 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputLayoutTourRoute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:hint="@string/tour_create_route_hint"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <AutoCompleteTextView
+                android:id="@+id/inputTourRoute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutTourCapacity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -19,5 +19,7 @@ data class Ave(
     val sonido: String
 ) {
     fun imageUrl(): String = "${AppConstants.BASE_URL}${AppConstants.IMAGES_PATH}$imagen"
+    
+    fun soundUrl(): String = sonido
 }
 

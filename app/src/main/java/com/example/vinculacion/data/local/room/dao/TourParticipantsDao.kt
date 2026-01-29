@@ -21,6 +21,9 @@ interface TourParticipantsDao {
     @Query("SELECT * FROM tour_participantes WHERE tour_id = :tourId")
     fun observeByTour(tourId: String): Flow<List<TourParticipantEntity>>
 
+    @Query("SELECT * FROM tour_participantes")
+    fun observeAll(): Flow<List<TourParticipantEntity>>
+
     @Query("SELECT * FROM tour_participantes WHERE tour_id = :tourId")
     suspend fun getByTour(tourId: String): List<TourParticipantEntity>
 

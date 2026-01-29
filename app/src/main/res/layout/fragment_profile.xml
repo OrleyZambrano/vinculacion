@@ -90,15 +90,6 @@
                     android:checkable="false"
                     app:chipIconVisible="false" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/profileRefreshRoleButton"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/profile_role_refresh_button"
-                    android:visibility="gone" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,6 +119,53 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/profileOptionsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/profile_options_title"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/profileOptionsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profileEditButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_option_edit" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profileNotificationsButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/profile_option_notifications" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profilePrivacyButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/profile_option_privacy" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profileAboutButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/profile_option_about" />
+                </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/profileSignOutButton"

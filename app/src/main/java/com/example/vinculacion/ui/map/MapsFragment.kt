@@ -34,6 +34,7 @@ class MapsFragment : Fragment() {
             }
         }
         binding.mapsViewPager.adapter = adapter
+        binding.mapsViewPager.isUserInputEnabled = false
         tabMediator = TabLayoutMediator(binding.mapsTabLayout, binding.mapsViewPager) { tab, pos ->
             tab.text = when (pos) {
                 0 -> "Recorrido"

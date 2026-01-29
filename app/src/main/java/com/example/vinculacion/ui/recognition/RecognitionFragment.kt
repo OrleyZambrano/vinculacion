@@ -64,9 +64,18 @@ class RecognitionFragment : Fragment() {
         val action = pendingPermissionAction
         pendingPermissionAction = PendingPermissionAction.NONE
         if (granted && action == PendingPermissionAction.CAPTURE_IMAGE) {
-            launchCameraCapture()
+            requestLocationThenCapture()
         } else if (!granted && action == PendingPermissionAction.CAPTURE_IMAGE) {
             showMessage(getString(R.string.recognition_error_camera_permission))
+        }
+    }
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ ->
+        if (pendingPermissionAction == PendingPermissionAction.CAPTURE_IMAGE) {
+            pendingPermissionAction = PendingPermissionAction.NONE
+            launchCameraCapture()
         }
     }
 
@@ -215,11 +224,32 @@ class RecognitionFragment : Fragment() {
         }
         val hasPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         if (hasPermission) {
-            launchCameraCapture()
+            requestLocationThenCapture()
         } else {
             pendingPermissionAction = PendingPermissionAction.CAPTURE_IMAGE
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
+    }
+
+    private fun requestLocationThenCapture() {
+        if (hasLocationPermission()) {
+            launchCameraCapture()
+            return
+        }
+        pendingPermissionAction = PendingPermissionAction.CAPTURE_IMAGE
+        locationPermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
+    private fun hasLocationPermission(): Boolean {
+        val context = requireContext()
+        val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return fine || coarse
     }
 
     private fun launchCameraCapture() {

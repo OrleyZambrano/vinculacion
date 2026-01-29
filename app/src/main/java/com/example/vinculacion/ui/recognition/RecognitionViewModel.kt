@@ -3,10 +3,12 @@ package com.example.vinculacion.ui.recognition
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
+import android.location.Location
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.exifinterface.media.ExifInterface
 import com.example.vinculacion.R
 import com.example.vinculacion.data.recognition.RecognitionMatch
 import com.example.vinculacion.data.recognition.RecognitionRequest
@@ -17,6 +19,8 @@ import com.example.vinculacion.data.repository.RecognitionRepository
 import com.example.vinculacion.data.repository.WeatherRepository
 import com.example.vinculacion.data.model.UserLocation
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +62,10 @@ class RecognitionViewModel(application: Application) : AndroidViewModel(applicat
                     onFailure = { /* Continuar sin ubicación */ }
                 )
             }
-            
+            if (source == RecognitionSource.IMAGE) {
+                maybeWriteGeoTag(file, currentLocation)
+            }
+
             startProcessing(source, displayName ?: file.name, file, currentLocation)
             processFile(FileInfo(file, displayName, source))
         }
@@ -134,9 +141,13 @@ class RecognitionViewModel(application: Application) : AndroidViewModel(applicat
             selectedFileName = fileInfo.displayName ?: fileInfo.file.name
         )
 
+        val location = _uiState.value.currentLocation
         val request = RecognitionRequest(
             file = fileInfo.file,
             source = fileInfo.source,
+            latitude = location?.latitude,
+            longitude = location?.longitude,
+            accuracyMeters = location?.accuracy,
             capturedAt = System.currentTimeMillis(),
             userId = userId
         )
@@ -180,6 +191,27 @@ class RecognitionViewModel(application: Application) : AndroidViewModel(applicat
                 }
             } ?: throw IllegalArgumentException("No se pudo leer el archivo seleccionado")
             FileInfo(destination, displayName, source)
+        }
+    }
+
+    private suspend fun maybeWriteGeoTag(file: File, location: UserLocation?) {
+        if (location == null || !file.exists() || !file.canWrite()) return
+        withContext(ioDispatcher) {
+            runCatching {
+                val exif = ExifInterface(file)
+                val gpsLocation = Location("vinculacion").apply {
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    time = location.timestamp
+                    location.accuracy?.let { accuracy = it }
+                }
+                exif.setGpsInfo(gpsLocation)
+                val formatted = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US)
+                    .format(Date(location.timestamp))
+                exif.setAttribute(ExifInterface.TAG_DATETIME_ORIGINAL, formatted)
+                exif.setAttribute(ExifInterface.TAG_DATETIME, formatted)
+                exif.saveAttributes()
+            }
         }
     }
 

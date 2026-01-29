@@ -23,6 +23,7 @@ data class Tour(
     val meetingPointLng: Double?,
     val capacity: Int?,
     val suggestedPrice: Double?,
+    val routeId: String?,
     val routeGeoJson: String?,
     val notes: String?,
     val createdAt: Long,

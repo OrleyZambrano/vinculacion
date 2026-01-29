@@ -2,6 +2,7 @@ package com.example.vinculacion.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.example.vinculacion.BuildConfig
 import com.example.vinculacion.data.local.room.VinculacionDatabase
 import com.example.vinculacion.data.local.room.entities.TourParticipantStatus
 import com.example.vinculacion.data.local.room.mappers.toDomain
@@ -58,7 +59,9 @@ class ToursRepository(context: Context) {
 
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("ToursRepository", "Error syncing from Firestore", e)
+            if (BuildConfig.DEBUG) {
+                Log.e("ToursRepository", "Error syncing from Firestore", e)
+            }
             Result.failure(e)
         }
     }
@@ -81,6 +84,7 @@ class ToursRepository(context: Context) {
                 "meetingPointLng" to tour.meetingPointLng,
                 "capacity" to tour.capacity,
                 "suggestedPrice" to tour.suggestedPrice,
+                "routeId" to tour.routeId,
                     "meetingPoint" to tour.meetingPoint,
                     "coverImageUrl" to tour.coverImageUrl,
                     "difficulty" to tour.difficulty,
@@ -96,7 +100,56 @@ class ToursRepository(context: Context) {
             // Also save locally for offline access
             toursDao.upsert(tour.toEntity())
             
-            Log.d("ToursRepository", "Tour saved to Firebase: ${tour.id}")
+            if (BuildConfig.DEBUG) {
+                Log.d("ToursRepository", "Tour saved to Firebase: ${tour.id}")
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateTourRoute(tourId: String, routeGeoJson: String?): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val updatedAt = System.currentTimeMillis()
+            val updates = mapOf(
+                "routeGeoJson" to routeGeoJson,
+                "updatedAt" to updatedAt
+            )
+
+            toursCollection.document(tourId).update(updates).await()
+
+            val current = toursDao.getTour(tourId)?.toDomain()
+            if (current != null) {
+                val updatedTour = current.copy(
+                    routeGeoJson = routeGeoJson,
+                    updatedAt = updatedAt
+                )
+                toursDao.upsert(updatedTour.toEntity())
+            }
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateGuideName(guideId: String, guideName: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val snapshot = toursCollection
+                .whereEqualTo("guideId", guideId)
+                .get()
+                .await()
+
+            val batch = firestore.batch()
+            snapshot.documents.forEach { doc ->
+                batch.update(doc.reference, "guideName", guideName)
+            }
+            if (!snapshot.isEmpty) {
+                batch.commit().await()
+            }
+
+            toursDao.updateGuideName(guideId, guideName)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -109,6 +162,9 @@ class ToursRepository(context: Context) {
 
     fun observeParticipants(tourId: String): Flow<List<TourParticipant>> =
         participantsDao.observeByTour(tourId).map { list -> list.map { it.toDomain() } }
+
+    fun observeAllParticipants(): Flow<List<TourParticipant>> =
+        participantsDao.observeAll().map { list -> list.map { it.toDomain() } }
 
     fun observeParticipantsByUser(userId: String): Flow<List<TourParticipant>> =
         participantsDao.observeByUser(userId).map { list -> list.map { it.toDomain() } }
@@ -138,7 +194,9 @@ class ToursRepository(context: Context) {
             // Also save locally
             participantsDao.upsert(participant.toEntity())
             
-            Log.d("ToursRepository", "Participant request saved: ${participant.id}")
+            if (BuildConfig.DEBUG) {
+                Log.d("ToursRepository", "Participant request saved: ${participant.id}")
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -172,7 +230,9 @@ class ToursRepository(context: Context) {
                         processedAt = processedAt
                     )
                     
-                    Log.d("ToursRepository", "Participant status updated: $status")
+                    if (BuildConfig.DEBUG) {
+                        Log.d("ToursRepository", "Participant status updated: $status")
+                    }
                     Result.success(Unit)
                 } else {
                     Result.failure(IllegalStateException("Participant not found"))
@@ -201,7 +261,9 @@ class ToursRepository(context: Context) {
             val participants = snapshot.documents.mapNotNull { it.toParticipantDomain() }
             participantsDao.replaceForTour(tourId, participants.map { it.toEntity() })
         } catch (e: Exception) {
-            Log.e("ToursRepository", "Error syncing participants for tour $tourId", e)
+            if (BuildConfig.DEBUG) {
+                Log.e("ToursRepository", "Error syncing participants for tour $tourId", e)
+            }
         }
     }
 
@@ -239,6 +301,7 @@ class ToursRepository(context: Context) {
             meetingPointLng = readDouble("meetingPointLng"),
             capacity = readInt("capacity"),
             suggestedPrice = readDouble("suggestedPrice") ?: readDouble("price"),
+            routeId = getString("routeId"),
             routeGeoJson = getString("routeGeoJson"),
             notes = getString("notes"),
             createdAt = createdAt,

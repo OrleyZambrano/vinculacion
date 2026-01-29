@@ -66,6 +66,8 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
         initialValue = emptyList()
     )
 
+    private val allParticipantsFlow = toursRepository.observeAllParticipants()
+
     init {
         observeTours()
     }
@@ -121,7 +123,7 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
             _uiState.value = UiState.Loading
             toursRepository.syncFromRemote()
             val tours = toursRepository.observeTours().first()
-            val items = buildUi(authState.value, tours, userParticipationFlow.value)
+            val items = buildUi(authState.value, tours, userParticipationFlow.value, allParticipantsFlow.first())
             _allTours.value = items
             filterAndSearchTours()
         }
@@ -135,7 +137,9 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
         dateTime: Long,
         meetingPoint: String,
         capacity: Int?,
-        guidePhone: String?
+        guidePhone: String?,
+        routeId: String?,
+        routeGeoJson: String?
     ) {
         viewModelScope.launch {
             val auth = authState.value
@@ -163,7 +167,8 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
                     meetingPointLng = null,
                     capacity = capacity,
                     suggestedPrice = null,
-                    routeGeoJson = null,
+                    routeId = routeId,
+                    routeGeoJson = routeGeoJson,
                     notes = null,
                     createdAt = System.currentTimeMillis(),
                     updatedAt = System.currentTimeMillis(),
@@ -204,6 +209,12 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
                 _events.send(TourEvent.ShowMessage(getApplication<Application>().getString(R.string.tour_error_duplicate)))
                 return@launch
             }
+            val approvedCount = toursRepository.getParticipantsByTour(tour.id)
+                .count { it.status == TourParticipantStatus.APPROVED }
+            if (tour.capacity != null && approvedCount >= tour.capacity) {
+                _events.send(TourEvent.ShowError(getApplication<Application>().getString(R.string.tour_capacity_full)))
+                return@launch
+            }
             val result = participationManager.requestJoin(tour, auth.profile)
             if (result.isSuccess) {
                 _events.send(TourEvent.ShowMessage(getApplication<Application>().getString(R.string.tour_join_success, tour.title)))
@@ -218,6 +229,11 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
             val auth = authState.value
             if (!auth.isAuthenticated) {
                 _events.send(TourEvent.ShowError(getApplication<Application>().getString(R.string.tour_status_guest_prompt)))
+                return@launch
+            }
+            val current = toursRepository.getParticipant(tour.id, auth.profile.id)
+            if (current == null || (current.status != TourParticipantStatus.PENDING && current.status != TourParticipantStatus.APPROVED)) {
+                _events.send(TourEvent.ShowError(getApplication<Application>().getString(R.string.tour_error_generic)))
                 return@launch
             }
             val result = participationManager.cancelRequest(tour.id, auth.profile)
@@ -242,7 +258,12 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             // Ensure latest participants from Firestore
-            toursRepository.getParticipantsByTour(tourId)
+            val participants = toursRepository.getParticipantsByTour(tourId)
+            val approvedCount = participants.count { it.status == TourParticipantStatus.APPROVED }
+            if (tour.capacity != null && approvedCount >= tour.capacity) {
+                _events.send(TourEvent.ShowError(getApplication<Application>().getString(R.string.tour_capacity_full)))
+                return@launch
+            }
             val participant = toursRepository.getParticipant(tourId, participantId)
             if (participant == null) {
                 _events.send(TourEvent.ShowError(getApplication<Application>().getString(R.string.tour_error_generic)))
@@ -311,9 +332,10 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
             combine(
                 toursRepository.observeTours(),
                 authState,
-                userParticipationFlow
-            ) { tours, auth, participations ->
-                buildUi(auth, tours, participations)
+                userParticipationFlow,
+                allParticipantsFlow
+            ) { tours, auth, participations, allParticipants ->
+                buildUi(auth, tours, participations, allParticipants)
             }.collect { items ->
                 _allTours.value = items
                 filterAndSearchTours()
@@ -324,16 +346,25 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
     private fun buildUi(
         auth: AuthState,
         tours: List<Tour>,
-        participations: List<com.example.vinculacion.data.model.TourParticipant>
+        participations: List<com.example.vinculacion.data.model.TourParticipant>,
+        allParticipants: List<com.example.vinculacion.data.model.TourParticipant>
     ): List<TourCardUi> {
         return tours.map { tour ->
             val participation = participations.firstOrNull { it.tourId == tour.id }
+            val approvedCount = allParticipants.count {
+                it.tourId == tour.id && it.status == TourParticipantStatus.APPROVED
+            }
+            val remainingCapacity = tour.capacity?.let { capacity ->
+                (capacity - approvedCount).coerceAtLeast(0)
+            }
             val isOwnTour = auth.isAuthenticated && tour.guideId == auth.profile.id
             val canRequest = auth.isAuthenticated && 
                 (participation == null || participation.status == TourParticipantStatus.CANCELLED || participation.status == TourParticipantStatus.DECLINED) && 
                 tour.status.allowsRequests() &&
-                !isOwnTour  // Los guías no pueden unirse a sus propios tours
-            val canCancel = auth.isAuthenticated && participation != null && participation.status == TourParticipantStatus.PENDING
+                !isOwnTour &&
+                (remainingCapacity == null || remainingCapacity > 0) // Evitar solicitudes si no hay cupos
+            val canCancel = auth.isAuthenticated && participation != null &&
+                (participation.status == TourParticipantStatus.PENDING || participation.status == TourParticipantStatus.APPROVED)
             
             TourCardUi(
                 tour = tour,
@@ -341,7 +372,9 @@ class ToursViewModel(application: Application) : AndroidViewModel(application) {
                 requiresAuthentication = !auth.isAuthenticated,
                 canRequestJoin = canRequest,
                 canCancelJoin = canCancel,
-                isGuide = isOwnTour
+                isGuide = isOwnTour,
+                approvedCount = approvedCount,
+                capacityRemaining = remainingCapacity
             )
         }
     }

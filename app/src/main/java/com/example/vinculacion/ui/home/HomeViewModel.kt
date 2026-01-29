@@ -3,6 +3,7 @@ package com.example.vinculacion.ui.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import android.util.Log
 import com.example.vinculacion.R
 import com.example.vinculacion.data.model.Weather
 import com.example.vinculacion.data.repository.AvesRepository
@@ -15,6 +16,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
+
+    private companion object {
+        const val TAG = "Weather"
+    }
 
     private val repository = AvesRepository(application)
     private val weatherRepository = WeatherRepository(application)
@@ -75,10 +80,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadWeather() {
         viewModelScope.launch {
+            Log.d(TAG, "loadWeather started")
             _weatherState.value = UiState.Loading
             
             val locationResult = weatherRepository.getCurrentLocation()
             if (locationResult.isFailure) {
+                Log.e(TAG, "loadWeather location failed", locationResult.exceptionOrNull())
                 _weatherState.value = UiState.Error(
                     locationResult.exceptionOrNull() ?: Exception("Error obteniendo ubicación")
                 )
@@ -89,8 +96,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val weatherResult = weatherRepository.getCurrentWeather(location)
             
             _weatherState.value = if (weatherResult.isSuccess) {
+                Log.d(TAG, "loadWeather success")
                 UiState.Success(weatherResult.getOrNull()!!)
             } else {
+                Log.e(TAG, "loadWeather weather failed", weatherResult.exceptionOrNull())
                 UiState.Error(weatherResult.exceptionOrNull() ?: Exception("Error obteniendo clima"))
             }
         }

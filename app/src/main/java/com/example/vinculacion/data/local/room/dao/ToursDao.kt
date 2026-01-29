@@ -30,6 +30,9 @@ interface ToursDao {
     @Query("DELETE FROM tours WHERE id = :id")
     suspend fun delete(id: String)
 
+    @Query("UPDATE tours SET guia_nombre = :guideName WHERE guia_id = :guideId")
+    suspend fun updateGuideName(guideId: String, guideName: String)
+
     @Query("DELETE FROM tours")
     suspend fun clear()
 

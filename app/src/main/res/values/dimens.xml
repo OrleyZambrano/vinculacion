@@ -40,7 +40,7 @@
 
     <!-- Tamaños de imágenes -->
     <dimen name="thumbnail_size">90dp</dimen>
-    <dimen name="banner_height">120dp</dimen>
+    <dimen name="banner_height">100dp</dimen>
     <dimen name="carousel_height">260dp</dimen>
 
     <!-- Ancho de elementos específicos -->
@@ -56,6 +56,10 @@
     <dimen name="text_size_body">14sp</dimen>
     <dimen name="text_size_title">16sp</dimen>
     <dimen name="text_size_headline">24sp</dimen>
+
+    <!-- Mapa de calor -->
+    <dimen name="map_label_padding_horizontal">6dp</dimen>
+    <dimen name="map_label_padding_vertical">4dp</dimen>
 
     <!-- Márgenes entre items -->
     <dimen name="item_margin_bottom">16dp</dimen>

@@ -1,9 +1,11 @@
 package com.example.vinculacion
 
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +17,7 @@ import com.example.vinculacion.ui.home.HomeFragment
 import com.example.vinculacion.ui.map.MapsFragment
 import com.example.vinculacion.ui.profile.ProfileFragment
 import com.example.vinculacion.ui.recognition.RecognitionFragment
+import com.example.vinculacion.ui.routes.MyRoutesFragment
 import kotlinx.coroutines.launch
 
 /**
@@ -24,6 +27,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, CategoriasFragment.CategoriasInteractions {
 
     private lateinit var contentContainer: FragmentContainerView
+    private lateinit var bannerImageView: ImageView
     private var currentDestination: Destination = Destination.HOME
     
     private val authRepository by lazy { AuthRepository(this) }
@@ -33,17 +37,34 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
         super.onCreate(savedInstanceState)
 
         // Configurar para respetar las barras del sistema
-        window.statusBarColor = getColor(R.color.primary_color)
-        window.navigationBarColor = getColor(R.color.white)
+        configureSystemBars()
 
         setContentView(R.layout.activity_main)
 
         contentContainer = findViewById(R.id.main_content_container)
+        bannerImageView = findViewById(R.id.bannerImageView)
         setupBottomNavigation()
         observeUserRole()
 
         // Mostrar contenido inicial del home
         navigateTo(Destination.HOME)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun configureSystemBars() {
+        window.statusBarColor = getColor(R.color.primary_color)
+        window.navigationBarColor = getColor(R.color.white)
+    }
+    
+    fun animateBannerTranslation(translationY: Float) {
+        val bannerHeight = resources.getDimensionPixelSize(R.dimen.banner_height)
+        
+        // Mover el banner
+        bannerImageView.translationY = translationY
+        
+        // Ajustar el padding del contenedor para que el contenido suba con el banner
+        val newPadding = (bannerHeight + translationY).toInt().coerceAtLeast(0)
+        contentContainer.setPadding(0, newPadding, 0, 0)
     }
     
     private fun observeUserRole() {
@@ -105,7 +126,7 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
         currentDestination = destination
         val fragment = when (destination) {
             Destination.HOME -> HomeFragment.newInstance()
-            Destination.CATEGORIES -> CategoriasFragment()
+            Destination.CATEGORIES -> CategoriasFragment.newInstance()
             Destination.TOURS -> {
                 if (isGuide) {
                     GuideDashboardFragment.newInstance()
@@ -114,6 +135,7 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
                 }
             }
             Destination.MAP -> MapsFragment.newInstance()
+            Destination.MY_ROUTES -> MyRoutesFragment.newInstance()
             Destination.RECOGNITION -> RecognitionFragment.newInstance()
             Destination.PROFILE -> ProfileFragment.newInstance()
         }
@@ -135,6 +157,15 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
         navigateTo(Destination.MAP)
     }
 
+    fun openMyRoutes() {
+        currentDestination = Destination.MY_ROUTES
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.main_content_container, MyRoutesFragment.newInstance())
+            addToBackStack("my_routes")
+        }
+    }
+
     override fun openRecognition() {
         navigateTo(Destination.RECOGNITION)
     }
@@ -142,6 +173,19 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
     override fun openProfile() {
         navigateTo(Destination.PROFILE)
     }
+    
+    /**
+     * Método llamado desde HomeFragment para ocultar/mostrar el banner al hacer scroll
+     */
+    fun onHomeScrollChanged(scrollY: Int, threshold: Int) {
+        val progress = (scrollY.toFloat() / threshold).coerceIn(0f, 1f)
+        
+        // Solo cambiar la transparencia sin mover el banner
+        bannerImageView.alpha = 1f - progress
+        
+        // Ocultar completamente cuando esté invisible para que no ocupe espacio
+        bannerImageView.visibility = if (progress >= 1f) android.view.View.GONE else android.view.View.VISIBLE
+    }
 
-    private enum class Destination { HOME, CATEGORIES, TOURS, MAP, PROFILE, RECOGNITION }
+    private enum class Destination { HOME, CATEGORIES, TOURS, MAP, MY_ROUTES, PROFILE, RECOGNITION }
 }

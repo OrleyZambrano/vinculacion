@@ -24,6 +24,8 @@ fun buildTourCardUi(
         requiresAuthentication = false,
         canRequestJoin = canRequestJoin,
         canCancelJoin = canCancelJoin,
-        isGuide = isGuide
+        isGuide = isGuide,
+        approvedCount = 0,
+        capacityRemaining = tour.capacity
     )
 }

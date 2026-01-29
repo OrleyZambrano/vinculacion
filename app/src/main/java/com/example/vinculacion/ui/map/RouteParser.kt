@@ -55,4 +55,18 @@ object RouteParser {
         }
         return result
     }
+
+    fun buildLineString(points: List<LatLng>): String {
+        val coordinates = JSONArray()
+        points.forEach { point ->
+            val pair = JSONArray()
+            pair.put(point.longitude)
+            pair.put(point.latitude)
+            coordinates.put(pair)
+        }
+        val jsonObject = JSONObject()
+        jsonObject.put("type", "LineString")
+        jsonObject.put("coordinates", coordinates)
+        return jsonObject.toString()
+    }
 }

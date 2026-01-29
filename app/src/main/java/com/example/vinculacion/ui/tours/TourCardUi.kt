@@ -12,7 +12,9 @@ data class TourCardUi(
     val requiresAuthentication: Boolean,
     val canRequestJoin: Boolean,
     val canCancelJoin: Boolean,
-    val isGuide: Boolean
+    val isGuide: Boolean,
+    val approvedCount: Int,
+    val capacityRemaining: Int?
 ) {
     val hasPendingRequest: Boolean = joinStatus == TourParticipantStatus.PENDING
 }

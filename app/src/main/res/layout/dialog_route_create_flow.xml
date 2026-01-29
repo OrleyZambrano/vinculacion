@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_medium">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/routeFlowCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="@dimen/card_elevation">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_medium">
+
+            <TextView
+                android:id="@+id/routeFlowTitle"
+                style="@style/TextAppearance.Vinculacion.Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/route_create_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/routeFlowStep"
+                style="@style/TextAppearance.Vinculacion.Caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xsmall"
+                android:text="@string/route_flow_step_start"
+                app:layout_constraintTop_toBottomOf="@id/routeFlowTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/routeFlowHint"
+                style="@style/TextAppearance.Vinculacion.Caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:background="@color/primary_soft"
+                android:padding="@dimen/spacing_small"
+                android:text="@string/route_flow_hint_start"
+                android:textColor="@color/text_primary"
+                app:layout_constraintTop_toBottomOf="@id/routeFlowStep"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutPlaceSearch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:hint="@string/route_flow_search_hint"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                app:layout_constraintTop_toBottomOf="@id/routeFlowHint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/routeFlowSearchButton">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPlaceSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textCapWords" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/routeFlowSearchButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:text="@string/route_flow_search"
+                app:layout_constraintBaseline_toBaselineOf="@id/inputLayoutPlaceSearch"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/routeFlowMapContainer"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/spacing_small"
+                app:layout_constraintTop_toBottomOf="@id/inputLayoutPlaceSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/inputLayoutRouteName" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutRouteName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:hint="@string/tour_route_name_hint"
+                android:visibility="gone"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                app:layout_constraintTop_toBottomOf="@id/routeFlowMapContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/routeFlowActions">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputRouteName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/routeFlowActions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:gravity="end"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/routeFlowCancel"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/route_create_cancel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/routeFlowConfirm"
+                    style="@style/Widget.Vinculacion.Button.Primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:text="@string/route_flow_confirm_start" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

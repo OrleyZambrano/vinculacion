@@ -19,3 +19,17 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# --- Retrofit / Gson ---
+-dontwarn javax.annotation.**
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
+
+# Keep model classes used by Gson (avoid nulls due to obfuscation)
+-keep class com.example.vinculacion.data.model.** { *; }
+-keepclassmembers class com.example.vinculacion.data.model.** { *; }
+
+# Keep @SerializedName fields
+-keepclassmembers,allowobfuscation class * {
+	@com.google.gson.annotations.SerializedName <fields>;
+}

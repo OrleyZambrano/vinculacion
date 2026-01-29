@@ -41,13 +41,14 @@ class TourParticipantsAdapter(
                 TourParticipantStatus.CANCELLED -> context.getString(R.string.tour_status_cancelled)
             }
             
-            val showActions = item.status == TourParticipantStatus.PENDING
+            val canApprove = item.status == TourParticipantStatus.PENDING || item.status == TourParticipantStatus.DECLINED
+            val canDecline = item.status == TourParticipantStatus.PENDING || item.status == TourParticipantStatus.APPROVED
             binding.participantApprove.apply {
-                visibility = if (showActions) View.VISIBLE else View.GONE
+                visibility = if (canApprove) View.VISIBLE else View.GONE
                 setOnClickListener { onApprove(item) }
             }
             binding.participantDecline.apply {
-                visibility = if (showActions) View.VISIBLE else View.GONE
+                visibility = if (canDecline) View.VISIBLE else View.GONE
                 setOnClickListener { onDecline(item) }
             }
         }

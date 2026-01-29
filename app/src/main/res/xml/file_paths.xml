@@ -3,4 +3,7 @@
     <files-path
         name="recognition_media"
         path="recognition_media/" />
+    <files-path
+        name="internal_files"
+        path="." />
 </paths>

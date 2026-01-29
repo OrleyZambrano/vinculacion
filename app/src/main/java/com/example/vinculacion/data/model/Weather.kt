@@ -19,7 +19,11 @@ data class Weather(
     val temperatureCelsius: Int get() = temperature.toInt()
     val windSpeedKmh: Int get() = (windSpeed * 3.6).toInt()
     
-    fun getIconUrl(): String = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
+    fun getIconUrl(): String = if (iconCode.startsWith("http")) {
+        iconCode
+    } else {
+        "https:${iconCode}"
+    }
     
     fun getBirdActivityLevel(): String = when {
         temperature < 5 -> "Baja actividad - Muy frío"

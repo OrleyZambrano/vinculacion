@@ -9,12 +9,12 @@ import com.example.vinculacion.data.repository.ToursRepository
 import com.example.vinculacion.data.model.Tour
 import com.example.vinculacion.ui.common.UiState
 import com.example.vinculacion.ui.tours.TourCardUi
-import com.example.vinculacion.ui.tours.buildTourCardUi
 import java.util.UUID
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -45,19 +45,31 @@ class GuideDashboardViewModel(application: Application) : AndroidViewModel(appli
             
             try {
                 toursRepository.syncFromRemote()
-                toursRepository.observeTours().collect { allTours ->
+                combine(
+                    toursRepository.observeTours(),
+                    toursRepository.observeAllParticipants()
+                ) { allTours, allParticipants ->
                     val myTours = allTours.filter { it.guideId == guideId }
-                    
-                    val tourCards = myTours.map { tour ->
-                        buildTourCardUi(
+                    myTours.map { tour ->
+                        val approvedCount = allParticipants.count { participant ->
+                            participant.tourId == tour.id &&
+                                participant.status == com.example.vinculacion.data.local.room.entities.TourParticipantStatus.APPROVED
+                        }
+                        val remainingCapacity = tour.capacity?.let { capacity ->
+                            (capacity - approvedCount).coerceAtLeast(0)
+                        }
+                        TourCardUi(
                             tour = tour,
-                            isGuide = true,
-                            joinStatus = null, // Los guías no tienen estado de participación en sus propios tours
+                            joinStatus = null,
+                            requiresAuthentication = false,
+                            canRequestJoin = false,
                             canCancelJoin = false,
-                            currentUserId = guideId
+                            isGuide = true,
+                            approvedCount = approvedCount,
+                            capacityRemaining = remainingCapacity
                         )
                     }
-                    
+                }.collect { tourCards ->
                     _uiState.value = if (tourCards.isEmpty()) {
                         UiState.Empty()
                     } else {
@@ -81,7 +93,9 @@ class GuideDashboardViewModel(application: Application) : AndroidViewModel(appli
         dateTime: Long,
         meetingPoint: String,
         capacity: Int?,
-        guidePhone: String?
+        guidePhone: String?,
+        routeId: String?,
+        routeGeoJson: String?
     ) {
         viewModelScope.launch {
             val authState = authRepository.authState.first()
@@ -109,7 +123,8 @@ class GuideDashboardViewModel(application: Application) : AndroidViewModel(appli
                     meetingPointLng = null,
                     capacity = capacity,
                     suggestedPrice = null,
-                    routeGeoJson = null,
+                    routeId = routeId,
+                    routeGeoJson = routeGeoJson,
                     notes = null,
                     createdAt = System.currentTimeMillis(),
                     updatedAt = System.currentTimeMillis(),
@@ -169,6 +184,21 @@ class GuideDashboardViewModel(application: Application) : AndroidViewModel(appli
 
     suspend fun getParticipants(tourId: String): List<com.example.vinculacion.data.model.TourParticipant> {
         return toursRepository.getParticipantsByTour(tourId)
+    }
+
+    fun updateTourRoute(tourId: String, routeGeoJson: String?) {
+        viewModelScope.launch {
+            val result = toursRepository.updateTourRoute(tourId, routeGeoJson)
+            result.fold(
+                onSuccess = {
+                    _events.send(GuideDashboardEvent.ShowSuccess(getApplication<Application>().getString(R.string.tour_route_save_success)))
+                    loadMyTours()
+                },
+                onFailure = { error ->
+                    _events.send(GuideDashboardEvent.ShowError(error.localizedMessage ?: getApplication<Application>().getString(R.string.tour_route_save_error)))
+                }
+            )
+        }
     }
 }
 

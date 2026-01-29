@@ -8,8 +8,10 @@
     <color name="primary_color">#2D5F3F</color>          <!-- Verde bosque profundo -->
     <color name="primary_color_dark">#1A3D2A</color>     <!-- Verde oscuro noche -->
     <color name="primary_soft">#E8F3ED</color>           <!-- Verde suave niebla -->
+    <color name="primary_vibrant">#3FAF63</color>        <!-- Verde vibrante para botones -->
     <color name="accent_color">#D97D47</color>           <!-- Terracota cálido -->
     <color name="accent_light">#F4E4D7</color>           <!-- Beige arena -->
+    <color name="accent_vibrant">#FF8C42</color>         <!-- Naranja vibrante para botones secundarios -->
 
     <!-- Colores secundarios - Paleta natural -->
     <color name="sky_blue">#7BA8C1</color>              <!-- Azul cielo sereno -->

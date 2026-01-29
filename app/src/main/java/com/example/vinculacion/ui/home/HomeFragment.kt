@@ -7,10 +7,13 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -22,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.vinculacion.MainActivity
 import com.example.vinculacion.R
 import com.example.vinculacion.databinding.FragmentHomeBinding
 import com.example.vinculacion.ui.common.UiState
@@ -60,6 +64,7 @@ class HomeFragment : Fragment() {
     private val carouselAdapter = HomeCarouselAdapter {
         listener?.openCategories()
     }
+    private val ecoTipsAdapter = EcoTipsAdapter()
     private val quickActionsAdapter = HomeQuickActionsAdapter { action ->
         listener?.let { interactions ->
             when (action) {
@@ -74,6 +79,10 @@ class HomeFragment : Fragment() {
 
     private var listener: HomeInteractions? = null
     private var tabMediator: TabLayoutMediator? = null
+    private var ecoTipsMediator: TabLayoutMediator? = null
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private var autoScrollRunnable: Runnable? = null
+    private var ecoTipsAutoScrollRunnable: Runnable? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -92,21 +101,106 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCarousel()
+        setupEcoTipsCarousel()
         setupQuickActions()
+        setupQuickActionsFab()
         setupRecognitionHero()
         setupSwipeRefresh()
         setupWeatherCard()
+        setupScrollBehavior()
         collectHomeState()
         collectWeatherState()
     }
 
     private fun setupCarousel() {
         binding.topBirdsPager.adapter = carouselAdapter
+        binding.topBirdsPager.offscreenPageLimit = 1
+        
+        // Pausar el auto-scroll cuando el usuario está interactuando
+        binding.topBirdsPager.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING) {
+                    stopAutoScroll()
+                } else if (state == androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE) {
+                    setupAutoScroll()
+                }
+            }
+        })
+        
         tabMediator = TabLayoutMediator(binding.pagerIndicator, binding.topBirdsPager) { tab, position ->
             tab.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.home_carousel_dot)?.mutate()
             tab.contentDescription = getString(R.string.home_carousel_indicator_description, position + 1)
         }
         tabMediator?.attach()
+        setupAutoScroll()
+    }
+
+    private fun setupAutoScroll() {
+        // Detener cualquier auto-scroll anterior
+        stopAutoScroll()
+        
+        autoScrollRunnable = object : Runnable {
+            override fun run() {
+                if (_binding == null) return
+                val itemCount = carouselAdapter.itemCount
+                if (itemCount > 1) {
+                    val currentItem = binding.topBirdsPager.currentItem
+                    val nextItem = (currentItem + 1) % itemCount
+                    binding.topBirdsPager.setCurrentItem(nextItem, true)
+                }
+                autoScrollHandler.postDelayed(this, 5000) // Cambiar cada 5 segundos
+            }
+        }
+        autoScrollRunnable?.let { autoScrollHandler.postDelayed(it, 5000) }
+    }
+
+    private fun stopAutoScroll() {
+        autoScrollRunnable?.let { autoScrollHandler.removeCallbacks(it) }
+    }
+
+    private fun setupEcoTipsCarousel() {
+        binding.ecoTipsPager.adapter = ecoTipsAdapter
+        binding.ecoTipsPager.offscreenPageLimit = 1
+        
+        // Pausar el auto-scroll cuando el usuario está interactuando
+        binding.ecoTipsPager.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING) {
+                    stopEcoTipsAutoScroll()
+                } else if (state == androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE) {
+                    setupEcoTipsAutoScroll()
+                }
+            }
+        })
+        
+        ecoTipsMediator = TabLayoutMediator(binding.ecoTipsIndicator, binding.ecoTipsPager) { tab, position ->
+            tab.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.home_carousel_dot)?.mutate()
+        }
+        ecoTipsMediator?.attach()
+        setupEcoTipsAutoScroll()
+    }
+
+    private fun setupEcoTipsAutoScroll() {
+        // Detener cualquier auto-scroll anterior
+        stopEcoTipsAutoScroll()
+        
+        ecoTipsAutoScrollRunnable = object : Runnable {
+            override fun run() {
+                if (_binding == null) return
+                val itemCount = ecoTipsAdapter.itemCount
+                if (itemCount > 1) {
+                    val currentItem = binding.ecoTipsPager.currentItem
+                    val nextItem = (currentItem + 1) % itemCount
+                    binding.ecoTipsPager.setCurrentItem(nextItem, true)
+                }
+                autoScrollHandler.postDelayed(this, 6000) // Cambiar cada 6 segundos
+            }
+        }
+        ecoTipsAutoScrollRunnable?.let { autoScrollHandler.postDelayed(it, 6000) }
+    }
+
+    private fun stopEcoTipsAutoScroll() {
+        ecoTipsAutoScrollRunnable?.let { autoScrollHandler.removeCallbacks(it) }
     }
 
     private fun setupQuickActions() {
@@ -114,6 +208,63 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = quickActionsAdapter
         }
+    }
+
+    private fun setupQuickActionsFab() {
+        binding.quickActionsFab.setOnClickListener { view ->
+            showQuickActionsMenu(view)
+        }
+    }
+
+    private fun showQuickActionsMenu(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.popup_quick_actions, null)
+        
+        // Medir el contenido antes de mostrarlo
+        popupView.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        
+        val popupWindow = PopupWindow(
+            popupView,
+            popupView.measuredWidth,
+            popupView.measuredHeight,
+            true
+        )
+        
+        // Configurar las acciones de los botones
+        popupView.findViewById<View>(R.id.action_categories)?.setOnClickListener {
+            popupWindow.dismiss()
+            listener?.openCategories()
+        }
+        
+        popupView.findViewById<View>(R.id.action_tours)?.setOnClickListener {
+            popupWindow.dismiss()
+            listener?.openTours()
+        }
+        
+        popupView.findViewById<View>(R.id.action_map)?.setOnClickListener {
+            popupWindow.dismiss()
+            listener?.openMap()
+        }
+        
+        popupView.findViewById<View>(R.id.action_recognition)?.setOnClickListener {
+            popupWindow.dismiss()
+            listener?.openRecognition()
+        }
+        
+        popupView.findViewById<View>(R.id.action_profile)?.setOnClickListener {
+            popupWindow.dismiss()
+            listener?.openProfile()
+        }
+        
+        // Mostrar el popup encima del FAB
+        popupWindow.elevation = 16f
+        val location = IntArray(2)
+        anchor.getLocationOnScreen(location)
+        popupWindow.showAtLocation(anchor, android.view.Gravity.NO_GRAVITY, 
+            location[0] - popupView.measuredWidth + anchor.width, 
+            location[1] - popupView.measuredHeight - 20)
     }
 
     private fun setupRecognitionHero() {
@@ -144,6 +295,18 @@ class HomeFragment : Fragment() {
         
         // Cargar clima inicialmente
         checkLocationPermissionAndLoadWeather()
+    }
+
+    private fun setupScrollBehavior() {
+        binding.homeScrollView?.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            val bannerHeight = resources.getDimensionPixelSize(R.dimen.banner_height)
+            
+            // Calcular el desplazamiento del banner basado en el scroll
+            val translation = -scrollY.toFloat().coerceAtMost(bannerHeight.toFloat())
+            
+            // Mover el banner hacia arriba
+            (activity as? MainActivity)?.animateBannerTranslation(translation)
+        }
     }
 
     private fun handleWeatherErrorAction() {
@@ -361,12 +524,29 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        stopAutoScroll()
+        stopEcoTipsAutoScroll()
         tabMediator?.detach()
         tabMediator = null
+        ecoTipsMediator?.detach()
+        ecoTipsMediator = null
         binding.topBirdsPager.adapter = null
+        binding.ecoTipsPager.adapter = null
         binding.quickActionsList.adapter = null
         _binding = null
         super.onDestroyView()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopAutoScroll()
+        stopEcoTipsAutoScroll()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupAutoScroll()
+        setupEcoTipsAutoScroll()
     }
 
     override fun onDetach() {

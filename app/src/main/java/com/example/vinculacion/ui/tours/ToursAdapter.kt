@@ -16,7 +16,8 @@ import java.util.Date
 class ToursAdapter(
     private val onPrimaryAction: (TourCardUi) -> Unit,
     private val onSecondaryAction: (TourCardUi) -> Unit,
-    private val onWhatsAppAction: (TourCardUi) -> Unit = {}
+    private val onWhatsAppAction: (TourCardUi) -> Unit = {},
+    private val onRouteAction: (TourCardUi) -> Unit = {}
 ) : ListAdapter<TourCardUi, ToursAdapter.TourViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TourViewHolder {
@@ -39,7 +40,7 @@ class ToursAdapter(
             )
             binding.tourSchedule.text = formatSchedule(item.tour.startTimeEpoch, item.tour.endTimeEpoch)
             binding.tourStatusChip.text = statusLabel(context, item.tour.status)
-            binding.tourCapacity.text = capacityLabel(context, item.tour.capacity)
+            binding.tourCapacity.text = capacityLabel(context, item.tour.capacity, item.capacityRemaining)
 
             val joinStatusText = when (item.joinStatus) {
                 TourParticipantStatus.PENDING -> context.getString(R.string.tour_status_pending)
@@ -60,17 +61,23 @@ class ToursAdapter(
             }
 
             binding.tourSecondaryAction.apply {
-                visibility = if (item.isGuide) View.VISIBLE else View.GONE
-                setOnClickListener { onSecondaryAction(item) }
+                visibility = View.GONE
             }
 
             binding.tourPrimaryAction.apply {
                 text = when {
+                    item.isGuide -> context.getString(R.string.tour_manage_participants)
                     item.canCancelJoin -> context.getString(R.string.tour_action_cancel)
                     else -> context.getString(R.string.tour_action_request)
                 }
-                isEnabled = item.canRequestJoin || item.canCancelJoin || item.requiresAuthentication
+                isEnabled = if (item.isGuide) true else item.canRequestJoin || item.canCancelJoin || item.requiresAuthentication
                 setOnClickListener { onPrimaryAction(item) }
+            }
+
+            binding.tourRouteAction.apply {
+                val hasRoute = !item.tour.routeGeoJson.isNullOrBlank()
+                visibility = if (hasRoute) View.VISIBLE else View.GONE
+                setOnClickListener { onRouteAction(item) }
             }
             
             // Configurar información del guía
@@ -107,9 +114,10 @@ class ToursAdapter(
             TourStatus.DRAFT -> context.getString(R.string.tour_status_draft_label)
         }
 
-        private fun capacityLabel(context: android.content.Context, capacity: Int?): String = when (capacity) {
-            null -> context.getString(R.string.tour_capacity_unlimited)
-            else -> context.getString(R.string.tour_capacity_value, capacity)
+        private fun capacityLabel(context: android.content.Context, capacity: Int?, remaining: Int?): String = when {
+            capacity == null -> context.getString(R.string.tour_capacity_unlimited)
+            remaining == null -> context.getString(R.string.tour_capacity_value, capacity)
+            else -> context.getString(R.string.tour_capacity_remaining, remaining, capacity)
         }
 
         private fun formatSchedule(start: Long, end: Long?): String {

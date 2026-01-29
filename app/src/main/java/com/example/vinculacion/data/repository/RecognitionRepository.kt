@@ -49,6 +49,7 @@ class RecognitionRepository private constructor(
             payloadJson = payload
         )
         val stored = mediaRepository.saveDraft(draft)
+        runCatching { mediaRepository.pushRecordToRemote(stored) }
         resolvedAveId ?: stored.aveId
             ?.let { avesRepository.increasePopularity(it, increment = 1) }
         enqueueSyncTask(stored.id, recordType)
