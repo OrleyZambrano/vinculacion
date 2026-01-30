@@ -30,7 +30,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_welcome_title"
-                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="-0.01"
+                android:maxLines="1"
                 android:textColor="@color/text_primary" />
 
             <TextView
@@ -39,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@string/home_welcome_subtitle"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:lineSpacingMultiplier="1.3"
                 android:textColor="@color/text_secondary" />
 
             <!-- Weather Card -->
@@ -62,15 +66,30 @@
                     android:paddingHorizontal="16dp">
 
                     <!-- Progress -->
-                    <ProgressBar
+                    <LinearLayout
                         android:id="@+id/weatherProgressBar"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/spacing_large"
-                        android:layout_marginBottom="@dimen/spacing_large"
-                        android:visibility="gone" />
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:indeterminateTint="@color/primary_color" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Cargando clima…"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
 
                     <!-- Error State -->
                     <LinearLayout
@@ -231,29 +250,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
 
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/pagerIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:background="@android:color/transparent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:tabGravity="center"
-                        app:tabIndicatorHeight="0dp"
-                        app:tabIndicatorFullWidth="false"
-                        app:tabIndicatorColor="@color/primary_color"
-                        app:tabSelectedTextColor="@color/primary_color"
-                        app:tabTextColor="@color/text_secondary"
-                        app:tabMode="fixed"
-                        app:tabPaddingStart="6dp"
-                        app:tabPaddingEnd="6dp"
-                        app:tabPaddingTop="0dp"
-                        app:tabPaddingBottom="0dp"
-                        app:tabRippleColor="@null"
-                        app:tabIconTint="@null" />
-
                     <TextView
                         android:id="@+id/emptyCarouselText"
                         android:layout_width="wrap_content"
@@ -324,7 +320,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/recognitionHeroPhotoButton"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3.Button"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
@@ -336,17 +332,17 @@
                             android:paddingBottom="@dimen/button_padding_vertical"
                             android:textAllCaps="false"
                             android:letterSpacing="0.02"
+                            android:elevation="3dp"
                             android:text="@string/home_recognition_photo_button"
                             app:icon="@drawable/ic_camera"
                             app:iconGravity="textStart"
                             app:iconPadding="8dp"
                             app:iconSize="20dp"
-                            app:cornerRadius="@dimen/button_corner_radius"
-                            app:iconTint="@color/primary_color_dark" />
+                            app:cornerRadius="@dimen/button_corner_radius" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/recognitionHeroAudioButton"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -363,7 +359,9 @@
                             app:iconPadding="8dp"
                             app:iconSize="20dp"
                             app:cornerRadius="@dimen/button_corner_radius"
-                            app:iconTint="@color/primary_color_dark" />
+                            app:iconTint="@color/primary_color_dark"
+                            app:strokeColor="@color/primary_color"
+                            app:strokeWidth="1.5dp" />
 
                     </LinearLayout>
 
@@ -400,12 +398,11 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xxlarge"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:layout_marginEnd="@dimen/spacing_large"
-                android:layout_marginBottom="80dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                app:cardBackgroundColor="@color/primary_soft"
+                app:cardCornerRadius="@dimen/card_corner_radius_large"
+                app:cardElevation="@dimen/card_elevation"
+                app:strokeColor="@color/primary_color"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -454,33 +451,43 @@
                         android:layout_width="match_parent"
                         android:layout_height="180dp"/>
 
-                    <!-- Indicadores más sutiles -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal"
-                        android:gravity="center">
-
-                        <com.google.android.material.tabs.TabLayout
-                            android:id="@+id/ecoTipsIndicator"
-                            android:layout_width="wrap_content"
-                            android:layout_height="8dp"
-                            app:tabBackground="@drawable/home_carousel_dot"
-                            app:tabGravity="center"
-                            app:tabIndicatorHeight="0dp"
-                            app:tabMaxWidth="8dp"
-                            app:tabMinWidth="8dp"
-                            app:tabPaddingEnd="6dp"
-                            app:tabPaddingStart="6dp"
-                            app:tabRippleColor="@null" />
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Imágenes banner_dos y logoUleam -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:layout_marginBottom="80dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/bannerDosImage"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Banner Dos"
+                    android:src="@drawable/banner_dos" />
+
+                <ImageView
+                    android:id="@+id/logoUleamImage"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Logo Uleam"
+                    android:src="@drawable/logo_uleam" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

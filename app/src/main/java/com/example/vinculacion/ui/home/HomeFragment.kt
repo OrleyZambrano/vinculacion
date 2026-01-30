@@ -78,8 +78,6 @@ class HomeFragment : Fragment() {
     }
 
     private var listener: HomeInteractions? = null
-    private var tabMediator: TabLayoutMediator? = null
-    private var ecoTipsMediator: TabLayoutMediator? = null
     private val autoScrollHandler = Handler(Looper.getMainLooper())
     private var autoScrollRunnable: Runnable? = null
     private var ecoTipsAutoScrollRunnable: Runnable? = null
@@ -127,11 +125,6 @@ class HomeFragment : Fragment() {
             }
         })
         
-        tabMediator = TabLayoutMediator(binding.pagerIndicator, binding.topBirdsPager) { tab, position ->
-            tab.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.home_carousel_dot)?.mutate()
-            tab.contentDescription = getString(R.string.home_carousel_indicator_description, position + 1)
-        }
-        tabMediator?.attach()
         setupAutoScroll()
     }
 
@@ -173,10 +166,6 @@ class HomeFragment : Fragment() {
             }
         })
         
-        ecoTipsMediator = TabLayoutMediator(binding.ecoTipsIndicator, binding.ecoTipsPager) { tab, position ->
-            tab.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.home_carousel_dot)?.mutate()
-        }
-        ecoTipsMediator?.attach()
         setupEcoTipsAutoScroll()
     }
 
@@ -306,7 +295,7 @@ class HomeFragment : Fragment() {
             // Calcular el desplazamiento del banner basado en el scroll
             val translation = -scrollY.toFloat().coerceAtMost(bannerHeight.toFloat())
             
-            // Mover el banner hacia arriba
+            // Mover el banner hacia arriba (solo cuando estamos en Home)
             (activity as? MainActivity)?.animateBannerTranslation(translation)
         }
     }
@@ -527,17 +516,12 @@ class HomeFragment : Fragment() {
         binding.homeSwipeRefresh.isRefreshing = false
         carouselAdapter.submitList(data.topBirds)
         binding.emptyCarouselText.isVisible = data.topBirds.isEmpty()
-        binding.pagerIndicator.isVisible = data.topBirds.size > 1
         quickActionsAdapter.submitList(data.quickActions)
     }
 
     override fun onDestroyView() {
         stopAutoScroll()
         stopEcoTipsAutoScroll()
-        tabMediator?.detach()
-        tabMediator = null
-        ecoTipsMediator?.detach()
-        ecoTipsMediator = null
         binding.topBirdsPager.adapter = null
         binding.ecoTipsPager.adapter = null
         binding.quickActionsList.adapter = null

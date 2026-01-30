@@ -34,8 +34,8 @@
     <color name="text_on_primary">#FFFFFF</color>       <!-- Texto sobre primario -->
 
     <!-- Indicadores -->
-    <color name="carousel_indicator_inactive">#70388E3C</color>
-    <color name="carousel_indicator_active">#388E3C</color>
+    <color name="carousel_indicator_inactive">#B0BDBDBD</color>
+    <color name="carousel_indicator_active">#4CAF50</color>
 
     <!-- Estados -->
     <color name="success_green">#4CAF50</color>         <!-- Verde éxito Material -->

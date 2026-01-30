@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <size
-        android:width="8dp"
-        android:height="8dp" />
-    <solid android:color="@color/carousel_indicator_inactive" />
+        android:width="3dp"
+        android:height="3dp" />
+    <solid android:color="#50FFFFFF" />
 </shape>

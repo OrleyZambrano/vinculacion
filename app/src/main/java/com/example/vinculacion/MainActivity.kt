@@ -58,38 +58,6 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
         window.navigationBarColor = getColor(R.color.white)
     }
     
-    fun animateBannerTranslation(translationY: Float) {
-        val bannerHeight = resources.getDimensionPixelSize(R.dimen.banner_height)
-        
-        // Mover el banner
-        bannerImageView.translationY = translationY
-        
-        // Ajustar el padding del contenedor para que el contenido suba con el banner
-        val newPadding = (bannerHeight + translationY).toInt().coerceAtLeast(0)
-        contentContainer.setPadding(0, newPadding, 0, 0)
-    }
-    
-    private fun observeUserRole() {
-        lifecycleScope.launch {
-            authRepository.authState.collect { authState ->
-                val wasGuide = isGuide
-                isGuide = authState.profile.role == UserRole.GUIA
-                
-                // Si cambió el rol, actualizar la vista actual
-                if (wasGuide != isGuide) {
-                    updateCurrentView()
-                }
-            }
-        }
-    }
-    
-    private fun updateCurrentView() {
-        // Re-navegar al destino actual para actualizar el fragmento
-        val current = currentDestination
-        currentDestination = Destination.HOME  // Reset para forzar navegación
-        navigateTo(current)
-    }
-
     /**
      * Configura la navegación inferior personalizada con 5 botones
      */
@@ -120,12 +88,34 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
             navigateTo(Destination.PROFILE)
         }
     }
+    
+    private fun observeUserRole() {
+        lifecycleScope.launch {
+            authRepository.authState.collect { authState ->
+                val wasGuide = isGuide
+                isGuide = authState.profile.role == UserRole.GUIA
+                
+                // Si cambió el rol, actualizar la vista actual
+                if (wasGuide != isGuide) {
+                    updateCurrentView()
+                }
+            }
+        }
+    }
+    
+    private fun updateCurrentView() {
+        // Re-navegar al destino actual para actualizar el fragmento
+        val current = currentDestination
+        currentDestination = Destination.HOME  // Reset para forzar navegación
+        navigateTo(current)
+    }
 
     private fun navigateTo(destination: Destination) {
         if (destination == currentDestination && supportFragmentManager.findFragmentById(R.id.main_content_container) != null) {
             return
         }
         currentDestination = destination
+        updateBannerVisibility(destination)
         updateNavigationColors(destination)
         val fragment = when (destination) {
             Destination.HOME -> HomeFragment.newInstance()
@@ -148,8 +138,19 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
         }
     }
 
+    private fun updateBannerVisibility(destination: Destination) {
+        // Mostrar banner solo en Home, ocultar en las demás pantallas
+        if (destination == Destination.HOME) {
+            bannerImageView.visibility = android.view.View.VISIBLE
+            contentContainer.setPadding(0, resources.getDimensionPixelSize(R.dimen.banner_height), 0, 0)
+        } else {
+            bannerImageView.visibility = android.view.View.GONE
+            contentContainer.setPadding(0, 0, 0, 0)
+        }
+    }
+
     private fun updateNavigationColors(activeDestination: Destination) {
-        val activeColor = ContextCompat.getColor(this, android.R.color.holo_green_dark)
+        val activeColor = ContextCompat.getColor(this, R.color.primary_color)
         val inactiveColor = ContextCompat.getColor(this, R.color.text_secondary)
         
         // Resetear todos los botones a inactivo
@@ -173,6 +174,17 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
     private fun setNavigationItemColor(iconId: Int, textId: Int, color: Int) {
         findViewById<ImageView>(iconId)?.setColorFilter(color)
         findViewById<TextView>(textId)?.setTextColor(color)
+    }
+    
+    fun animateBannerTranslation(translationY: Float) {
+        val bannerHeight = resources.getDimensionPixelSize(R.dimen.banner_height)
+        
+        // Mover el banner
+        bannerImageView.translationY = translationY
+        
+        // Ajustar el padding del contenedor para que el contenido suba con el banner
+        val newPadding = (bannerHeight + translationY).toInt().coerceAtLeast(0)
+        contentContainer.setPadding(0, newPadding, 0, 0)
     }
 
     override fun openCategories() {
@@ -202,19 +214,6 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
 
     override fun openProfile() {
         navigateTo(Destination.PROFILE)
-    }
-    
-    /**
-     * Método llamado desde HomeFragment para ocultar/mostrar el banner al hacer scroll
-     */
-    fun onHomeScrollChanged(scrollY: Int, threshold: Int) {
-        val progress = (scrollY.toFloat() / threshold).coerceIn(0f, 1f)
-        
-        // Solo cambiar la transparencia sin mover el banner
-        bannerImageView.alpha = 1f - progress
-        
-        // Ocultar completamente cuando esté invisible para que no ocupe espacio
-        bannerImageView.visibility = if (progress >= 1f) android.view.View.GONE else android.view.View.VISIBLE
     }
 
     private enum class Destination { HOME, CATEGORIES, TOURS, MAP, MY_ROUTES, PROFILE, RECOGNITION }
