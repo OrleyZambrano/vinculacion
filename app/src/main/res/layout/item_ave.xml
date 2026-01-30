@@ -2,69 +2,62 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_margin="2dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="16dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="12dp"
     app:strokeWidth="0dp"
     android:foreground="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <!-- Imagen del ave - ocupa 75% de la tarjeta para mayor impacto visual -->
+        <!-- Imagen del ave -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/thumbnailImage"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="140dp"
             android:scaleType="centerCrop"
             android:background="@drawable/image_placeholder"
             android:contentDescription="Ave thumbnail"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/textContainer"
-            app:layout_constraintVertical_weight="0.75"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.None" />
 
-        <!-- Contenedor de texto compacto - ocupa 25% de la tarjeta -->
+        <!-- Contenedor de texto -->
         <LinearLayout
-            android:id="@+id/textContainer"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="6dp"
-            android:gravity="center_vertical"
-            android:background="@android:color/white"
+            android:padding="12dp"
             app:layout_constraintTop_toBottomOf="@id/thumbnailImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_weight="0.25">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
                 android:id="@+id/titleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textSize="13sp"
+                android:minHeight="40dp"
                 android:gravity="center_vertical" />
 
             <TextView
                 android:id="@+id/familyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/primary_color"
-                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:fontFamily="sans-serif"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
-                android:textSize="11sp"
                 android:ellipsize="end" />
 
         </LinearLayout>

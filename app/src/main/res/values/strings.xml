@@ -1,6 +1,7 @@
 <resources>
     <!-- Aplicación -->
     <string name="app_name">Uleam Naturapp</string>
+    <string name="splash_tagline">Explora la naturaleza</string>
 
     <!-- Pantalla principal -->
     <string name="welcome_title">¡Bienvenido a Uleam Naturapp!</string>

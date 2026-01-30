@@ -113,27 +113,7 @@ class CategoriasFragment : Fragment() {
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
             adapter = avesAdapter
-            // GridLayoutManager con 2 columnas y tarjetas cuadradas grandes
-            val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2)
-            layoutManager = gridLayoutManager
-            
-            // ItemDecoration para tarjetas cuadradas aprovechando mejor el espacio
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: android.graphics.Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    super.getItemOffsets(outRect, view, parent, state)
-                    // Calcular ancho disponible reduciendo márgenes mínimos
-                    val totalPadding = parent.paddingLeft + parent.paddingRight
-                    val spacing = 8 // Espacio mínimo entre tarjetas
-                    val width = (parent.width - totalPadding - spacing) / 2
-                    view.layoutParams.height = width
-                }
-            })
-            
+            layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2)
             // Añadir animación suave para cambios de items
             itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator().apply {
                 addDuration = 200
