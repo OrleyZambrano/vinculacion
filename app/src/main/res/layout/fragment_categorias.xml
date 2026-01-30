@@ -55,6 +55,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
+            android:hint="Buscar aves"
+            app:helperText="Ej: Garza, Limosa fedoa, Accipitridae"
+            app:helperTextEnabled="true"
+            app:helperTextTextColor="@color/text_secondary"
+            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:startIconTint="@color/primary_color"
             app:layout_constraintTop_toBottomOf="@id/avesHeader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -64,8 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:hint="@string/search_hint" />
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -73,8 +78,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/birds_filters_title"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="@color/text_primary"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintTop_toBottomOf="@id/searchInputLayout"
@@ -117,9 +124,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"
-            android:paddingTop="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             app:layout_constraintTop_toBottomOf="@id/filtersScroll"
             app:layout_constraintBottom_toTopOf="@id/detailCard"
             app:layout_constraintStart_toStartOf="parent"

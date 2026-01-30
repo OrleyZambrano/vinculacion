@@ -18,7 +18,14 @@ data class Ave(
     @SerializedName("nombre_comun") val nombreComun: String,
     val sonido: String
 ) {
-    fun imageUrl(): String = "${AppConstants.BASE_URL}${AppConstants.IMAGES_PATH}$imagen"
+    fun imageUrl(): String {
+        // Si la imagen está vacía o en blanco, retornar string vacío para que Glide use el placeholder
+        return if (imagen.isNotBlank()) {
+            "${AppConstants.BASE_URL}${AppConstants.IMAGES_PATH}$imagen"
+        } else {
+            ""
+        }
+    }
     
     fun soundUrl(): String = sonido
 }

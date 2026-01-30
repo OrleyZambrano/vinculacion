@@ -114,6 +114,7 @@ dependencies {
     implementation(libs.androidxExifinterface)
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

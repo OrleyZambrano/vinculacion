@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado seleccionado/checked -->
+    <item android:state_checked="true" android:color="@color/primary_color" />
+    <item android:state_selected="true" android:color="@color/primary_color" />
+    
+    <!-- Estado normal -->
+    <item android:color="@android:color/transparent" />
+</selector>

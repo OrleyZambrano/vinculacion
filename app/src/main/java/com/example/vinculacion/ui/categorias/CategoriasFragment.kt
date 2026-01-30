@@ -103,6 +103,7 @@ class CategoriasFragment : Fragment() {
         setupRecyclerView()
         setupSearch()
         setupFilters()
+        setupSwipeRefresh()
         setupFloatingActionButton()
         setupDetailCard()
         observeViewModel()
@@ -112,7 +113,37 @@ class CategoriasFragment : Fragment() {
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
             adapter = avesAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            // GridLayoutManager con 2 columnas y tarjetas cuadradas grandes
+            val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2)
+            layoutManager = gridLayoutManager
+            
+            // ItemDecoration para tarjetas cuadradas aprovechando mejor el espacio
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: android.graphics.Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    super.getItemOffsets(outRect, view, parent, state)
+                    // Calcular ancho disponible reduciendo márgenes mínimos
+                    val totalPadding = parent.paddingLeft + parent.paddingRight
+                    val spacing = 8 // Espacio mínimo entre tarjetas
+                    val width = (parent.width - totalPadding - spacing) / 2
+                    view.layoutParams.height = width
+                }
+            })
+            
+            // Añadir animación suave para cambios de items
+            itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator().apply {
+                addDuration = 200
+                changeDuration = 200
+                moveDuration = 200
+                removeDuration = 200
+            }
+            // Habilitar caché de vistas para mejor rendimiento
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
         }
     }
 
@@ -124,6 +155,12 @@ class CategoriasFragment : Fragment() {
 
     private fun setupFilters() {
         // Se llenan dinámicamente desde el ViewModel
+    }
+    
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.loadAves(forceRefresh = true)
+        }
     }
 
     private fun setupFloatingActionButton() {
@@ -160,6 +197,10 @@ class CategoriasFragment : Fragment() {
         }
         binding.detailBackdrop.setOnClickListener {
             hideDetailCard()
+        }
+        // Click en la imagen del modal para abrir vista con zoom
+        binding.detailImage.setOnClickListener {
+            currentDetailAve?.let { ave -> showImageZoomDialog(ave) }
         }
         binding.detailSoundButton.setOnClickListener {
             val isPlaying = mediaPlayer?.isPlaying == true
@@ -432,6 +473,36 @@ class CategoriasFragment : Fragment() {
     private fun showMessage(message: String) {
         android.widget.Toast.makeText(requireContext(), message, android.widget.Toast.LENGTH_SHORT).show()
     }
+    
+    private fun showImageZoomDialog(ave: Ave) {
+        val dialog = android.app.Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_image_zoom, null)
+        
+        val photoView = dialogView.findViewById<com.github.chrisbanes.photoview.PhotoView>(R.id.zoomImageView)
+        val closeButton = dialogView.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.closeButton)
+        val titleView = dialogView.findViewById<TextView>(R.id.imageTitle)
+        
+        titleView.text = ave.nombreComun
+        
+        // Cargar imagen con Glide
+        Glide.with(this)
+            .load(ave.imageUrl())
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
+            .into(photoView)
+        
+        closeButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        
+        // Cerrar al tocar el fondo
+        dialogView.setOnClickListener {
+            dialog.dismiss()
+        }
+        
+        dialog.setContentView(dialogView)
+        dialog.show()
+    }
 
     private fun showDetailCard(ave: Ave) {
         stopAudio()
@@ -500,12 +571,14 @@ class CategoriasFragment : Fragment() {
                                 binding.progressBar.visibility = View.GONE
                                 binding.recyclerView.visibility = View.VISIBLE
                                 binding.emptyText.visibility = View.GONE
+                                binding.swipeRefresh.isRefreshing = false
                             }
                             is UiState.Error -> {
                                 binding.progressBar.visibility = View.GONE
                                 binding.recyclerView.visibility = View.GONE
                                 binding.emptyText.visibility = View.VISIBLE
                                 binding.emptyText.text = state.message ?: "Error al cargar aves"
+                                binding.swipeRefresh.isRefreshing = false
                             }
                             else -> {}
                         }
@@ -514,7 +587,16 @@ class CategoriasFragment : Fragment() {
                 
                 launch {
                     viewModel.filteredAves.collect { aves ->
-                        avesAdapter.submitList(aves)
+                        // Usar submitList con callback para animación suave
+                        avesAdapter.submitList(aves) {
+                            // Scroll suave al inicio solo si hay un cambio significativo de filtro
+                            if (aves.isNotEmpty() && viewModel.avesState.value is UiState.Success) {
+                                binding.recyclerView.post {
+                                    binding.recyclerView.smoothScrollToPosition(0)
+                                }
+                            }
+                        }
+                        
                         if (aves.isEmpty() && viewModel.avesState.value is UiState.Success) {
                             binding.recyclerView.visibility = View.GONE
                             binding.emptyText.visibility = View.VISIBLE
@@ -623,16 +705,16 @@ class CategoriasFragment : Fragment() {
         ) : RecyclerView.ViewHolder(binding.root) {
             fun bind(ave: Ave) {
                 binding.titleText.text = ave.nombreComun
-                binding.subtitleText.text = ave.nombreCientifico
-                binding.familyText.text = "${ave.familia}"
+                binding.familyText.text = ave.familia ?: "Familia desconocida"
                 
                 Glide.with(binding.root.context)
                     .load(ave.imageUrl())
                     .placeholder(R.drawable.image_placeholder)
                     .error(R.drawable.image_placeholder)
+                    .centerCrop()
                     .into(binding.thumbnailImage)
                     
-                // Agregar click listener
+                // Agregar click listener a toda la tarjeta
                 binding.root.setOnClickListener {
                     onItemClick(ave)
                 }
