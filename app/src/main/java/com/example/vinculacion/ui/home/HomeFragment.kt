@@ -101,7 +101,6 @@ class HomeFragment : Fragment() {
         setupCarousel()
         setupEcoTipsCarousel()
         setupQuickActions()
-        setupQuickActionsFab()
         setupRecognitionHero()
         setupSwipeRefresh()
         setupWeatherCard()
@@ -113,6 +112,13 @@ class HomeFragment : Fragment() {
     private fun setupCarousel() {
         binding.topBirdsPager.adapter = carouselAdapter
         binding.topBirdsPager.offscreenPageLimit = 1
+        
+        // Iniciar en el medio de la lista infinita
+        binding.topBirdsPager.post {
+            if (carouselAdapter.itemCount > 0) {
+                binding.topBirdsPager.setCurrentItem(Int.MAX_VALUE / 2, false)
+            }
+        }
         
         // Pausar el auto-scroll cuando el usuario está interactuando
         binding.topBirdsPager.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
@@ -136,10 +142,9 @@ class HomeFragment : Fragment() {
             override fun run() {
                 if (_binding == null) return
                 val itemCount = carouselAdapter.itemCount
-                if (itemCount > 1) {
+                if (itemCount > 0) {
                     val currentItem = binding.topBirdsPager.currentItem
-                    val nextItem = (currentItem + 1) % itemCount
-                    binding.topBirdsPager.setCurrentItem(nextItem, true)
+                    binding.topBirdsPager.setCurrentItem(currentItem + 1, true)
                 }
                 autoScrollHandler.postDelayed(this, 5000) // Cambiar cada 5 segundos
             }
@@ -199,62 +204,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupQuickActionsFab() {
-        binding.quickActionsFab.setOnClickListener { view ->
-            showQuickActionsMenu(view)
-        }
-    }
 
-    private fun showQuickActionsMenu(anchor: View) {
-        val popupView = layoutInflater.inflate(R.layout.popup_quick_actions, null)
-        
-        // Medir el contenido antes de mostrarlo
-        popupView.measure(
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        )
-        
-        val popupWindow = PopupWindow(
-            popupView,
-            popupView.measuredWidth,
-            popupView.measuredHeight,
-            true
-        )
-        
-        // Configurar las acciones de los botones
-        popupView.findViewById<View>(R.id.action_categories)?.setOnClickListener {
-            popupWindow.dismiss()
-            listener?.openCategories()
-        }
-        
-        popupView.findViewById<View>(R.id.action_tours)?.setOnClickListener {
-            popupWindow.dismiss()
-            listener?.openTours()
-        }
-        
-        popupView.findViewById<View>(R.id.action_map)?.setOnClickListener {
-            popupWindow.dismiss()
-            listener?.openMap()
-        }
-        
-        popupView.findViewById<View>(R.id.action_recognition)?.setOnClickListener {
-            popupWindow.dismiss()
-            listener?.openRecognition()
-        }
-        
-        popupView.findViewById<View>(R.id.action_profile)?.setOnClickListener {
-            popupWindow.dismiss()
-            listener?.openProfile()
-        }
-        
-        // Mostrar el popup encima del FAB
-        popupWindow.elevation = 16f
-        val location = IntArray(2)
-        anchor.getLocationOnScreen(location)
-        popupWindow.showAtLocation(anchor, android.view.Gravity.NO_GRAVITY, 
-            location[0] - popupView.measuredWidth + anchor.width, 
-            location[1] - popupView.measuredHeight - 20)
-    }
 
     private fun setupRecognitionHero() {
         binding.homeRecognitionCard.setOnClickListener {

@@ -13,10 +13,19 @@ class HomeCarouselAdapter(
 ) : RecyclerView.Adapter<HomeCarouselAdapter.CarouselViewHolder>() {
 
     private val items = mutableListOf<Ave>()
+    private val infiniteItems = mutableListOf<Ave>()
 
     fun submitList(newItems: List<Ave>) {
         items.clear()
         items.addAll(newItems)
+        
+        // Crear lista infinita triplicando los items
+        infiniteItems.clear()
+        if (items.isNotEmpty()) {
+            infiniteItems.addAll(items)
+            infiniteItems.addAll(items)
+            infiniteItems.addAll(items)
+        }
         notifyDataSetChanged()
     }
 
@@ -26,10 +35,11 @@ class HomeCarouselAdapter(
     }
 
     override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
-        holder.bind(items[position])
+        val actualPosition = position % items.size
+        holder.bind(items[actualPosition])
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = if (items.isEmpty()) 0 else Int.MAX_VALUE
 
     class CarouselViewHolder(
         private val binding: ItemHomeCarouselBinding,

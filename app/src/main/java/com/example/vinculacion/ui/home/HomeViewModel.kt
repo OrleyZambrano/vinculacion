@@ -135,7 +135,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun observeHomeStreams() {
         viewModelScope.launch {
             combine(
-                repository.observeTopAves(limit = 5),
+                repository.observeTopAves(limit = 12),
                 repository.observeCategorias()
             ) { topBirds, categories ->
                 HomeUiData(topBirds, categories, quickActions)

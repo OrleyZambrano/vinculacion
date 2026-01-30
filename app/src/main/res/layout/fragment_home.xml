@@ -149,10 +149,11 @@
                             <!-- Icono del clima -->
                             <ImageView
                                 android:id="@+id/weatherIcon"
-                                android:layout_width="56dp"
-                                android:layout_height="56dp"
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
                                 android:contentDescription="@string/weather_icon_description"
-                                android:scaleType="fitCenter" />
+                                android:scaleType="centerInside"
+                                android:padding="4dp" />
 
                             <!-- Info de clima -->
                             <LinearLayout
@@ -218,7 +219,7 @@
                                 android:contentDescription="@string/weather_refresh"
                                 android:src="@drawable/ic_refresh"
                                 android:padding="8dp"
-                                app:tint="@color/text_secondary" />
+                                app:tint="@color/primary_color" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -460,7 +461,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xlarge"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal"
                 android:weightSum="2"
                 android:gravity="center">
@@ -493,21 +494,5 @@
     </androidx.core.widget.NestedScrollView>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <!-- Botón flotante de acciones rápidas -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/quickActionsFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/home_quick_actions_title"
-        app:srcCompat="@drawable/ic_quick_actions"
-        app:tint="@android:color/white"
-        app:backgroundTint="@color/primary_vibrant"
-        app:elevation="8dp"
-        app:pressedTranslationZ="12dp"
-        app:fabSize="normal" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
