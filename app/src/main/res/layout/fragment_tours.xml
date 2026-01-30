@@ -11,10 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="@dimen/spacing_medium"
-        android:paddingTop="@dimen/spacing_normal"
-        android:paddingEnd="@dimen/spacing_medium"
-        android:background="@android:color/white">
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:background="@android:color/white"
+        android:elevation="2dp">
 
         <!-- Header con título -->
         <LinearLayout
@@ -22,7 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:layout_width="32dp"
@@ -64,9 +66,8 @@
             android:id="@+id/filterChipGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:layout_marginBottom="@dimen/spacing_small"
-            app:chipSpacingHorizontal="@dimen/spacing_small"
+            android:layout_marginTop="12dp"
+            app:chipSpacingHorizontal="8dp"
             app:singleSelection="false">
 
             <com.google.android.material.chip.Chip
@@ -97,18 +98,18 @@
         android:id="@+id/toursSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="180dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/toursRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="@dimen/spacing_medium"
-            android:paddingEnd="@dimen/spacing_medium"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:clipToPadding="false"
-            android:paddingTop="@dimen/spacing_normal"
-            android:paddingBottom="@dimen/spacing_xlarge"
+            android:paddingTop="24dp"
+            android:paddingBottom="80dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -126,14 +127,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="20dp"
         android:visibility="gone"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardCornerRadius="12dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/toursEmptyTitle"

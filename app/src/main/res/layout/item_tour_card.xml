@@ -12,47 +12,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/card_padding_large">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/tourTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:letterSpacing="-0.005"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/text_primary" />
+            android:textColor="@color/text_primary"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/tourGuideName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:letterSpacing="0.01"
+            android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/text_secondary" />
+            android:textColor="@color/text_secondary"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/tourSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:letterSpacing="0.015"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/text_secondary" />
+            android:textColor="@color/text_secondary"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/tourStatusChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/detail_card_background"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:letterSpacing="0.02"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/primary_color" />
 
@@ -60,8 +62,7 @@
             android:id="@+id/tourCapacity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:letterSpacing="0.015"
+            android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:textColor="@color/text_secondary" />
 
@@ -70,18 +71,19 @@
             android:id="@+id/tourGuideInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
             android:background="@drawable/detail_card_background"
-            android:padding="12dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tour_guide_contact"
-                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 android:textColor="@color/primary_color"
-                android:layout_marginBottom="8dp" />
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="12dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,7 +135,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -141,28 +143,20 @@
                 android:id="@+id/tourPrimaryAction"
                 style="@style/Widget.Material3.Button"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:minHeight="@dimen/button_min_height"
-                android:paddingTop="@dimen/button_padding_vertical"
-                android:paddingBottom="@dimen/button_padding_vertical"
                 android:textAllCaps="false"
-                android:letterSpacing="0.02"
-                app:cornerRadius="@dimen/button_corner_radius"
+                app:cornerRadius="12dp"
                 android:text="@string/tour_action_request" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/tourSecondaryAction"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_normal"
-                android:minHeight="@dimen/button_min_height"
-                android:paddingTop="@dimen/button_padding_vertical"
-                android:paddingBottom="@dimen/button_padding_vertical"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
                 android:textAllCaps="false"
-                android:letterSpacing="0.02"
-                app:cornerRadius="@dimen/button_corner_radius"
+                app:cornerRadius="12dp"
                 app:strokeWidth="1.5dp"
                 android:text="@string/tour_action_manage"
                 android:visibility="gone" />
@@ -173,7 +167,8 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginTop="8dp"
+            android:textAllCaps="false"
             android:text="@string/tour_action_view_route"
             android:visibility="gone" />
 
@@ -181,8 +176,7 @@
             android:id="@+id/tourRequestStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:letterSpacing="0.015"
+            android:layout_marginTop="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:textColor="@color/text_secondary"
             android:visibility="gone" />
