@@ -42,7 +42,7 @@
         android:layout_marginStart="@dimen/bottom_nav_margin_horizontal"
         android:layout_marginEnd="@dimen/bottom_nav_margin_horizontal"
         android:layout_marginBottom="@dimen/bottom_nav_margin_bottom"
-        android:elevation="12dp"
+        android:elevation="16dp"
         android:padding="0dp"
         app:cardBackgroundColor="@color/bottom_nav_background"
         app:cardCornerRadius="@dimen/bottom_nav_corner_radius"
@@ -50,8 +50,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/nav_bar_outline"
-        app:strokeWidth="0dp">
+        app:strokeColor="#4CAF50"
+        app:strokeWidth="1.5dp">
 
         <LinearLayout
             android:id="@+id/custom_bottom_navigation"
@@ -72,17 +72,20 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:id="@+id/nav_home_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginBottom="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_home"
+                android:elevation="2dp"
                 android:tint="@color/text_secondary" />
 
             <TextView
+                android:id="@+id/nav_home_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_home"
@@ -103,17 +106,20 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:id="@+id/nav_categories_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginBottom="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_categories"
+                android:elevation="2dp"
                 android:tint="@color/text_secondary" />
 
             <TextView
+                android:id="@+id/nav_categories_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_categories"
@@ -134,17 +140,20 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:id="@+id/nav_tours_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginBottom="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_tours"
+                android:elevation="2dp"
                 android:tint="@color/text_secondary" />
 
             <TextView
+                android:id="@+id/nav_tours_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_tours"
@@ -165,17 +174,20 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:id="@+id/nav_map_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginBottom="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_option2"
+                android:elevation="2dp"
                 android:tint="@color/text_secondary" />
 
             <TextView
+                android:id="@+id/nav_map_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_map"
@@ -196,17 +208,20 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:id="@+id/nav_profile_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginBottom="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_profile"
+                android:elevation="2dp"
                 android:tint="@color/text_secondary" />
 
             <TextView
+                android:id="@+id/nav_profile_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_profile"

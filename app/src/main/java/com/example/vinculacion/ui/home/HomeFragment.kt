@@ -293,8 +293,10 @@ class HomeFragment : Fragment() {
             handleWeatherErrorAction()
         }
         
-        // Cargar clima inicialmente
-        checkLocationPermissionAndLoadWeather()
+        // Cargar clima solo si no hay datos previos (primera vez o después de error)
+        if (viewModel.weatherState.value !is UiState.Success) {
+            checkLocationPermissionAndLoadWeather()
+        }
     }
 
     private fun setupScrollBehavior() {
@@ -366,11 +368,17 @@ class HomeFragment : Fragment() {
 
     private fun renderWeather(weather: com.example.vinculacion.data.model.Weather) {
         binding.apply {
-            weatherLocation?.text = weather.cityName
+            // Mostrar temperatura y descripción por separado
+            val ageMinutes = (System.currentTimeMillis() - weather.timestamp) / (60 * 1000)
+            val description = if (ageMinutes > 15) {
+                "${weather.description.replaceFirstChar { it.uppercase() }} (Guardado)"
+            } else {
+                weather.description.replaceFirstChar { it.uppercase() }
+            }
+            
             weatherTemperature?.text = getString(R.string.weather_temperature, weather.temperatureCelsius)
-            weatherDescription?.text = weather.description.replaceFirstChar { it.uppercase() }
-            weatherHumidity?.text = getString(R.string.weather_humidity, weather.humidity)
-            weatherWind?.text = getString(R.string.weather_wind, weather.windSpeedKmh)
+            weatherDescription?.text = description
+            
             weatherBirdActivity?.text = weather.getBirdActivityLevel()
             
             // Load weather icon

@@ -4,49 +4,50 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Colores principales - Inspirados en naturaleza -->
-    <color name="primary_color">#2D5F3F</color>          <!-- Verde bosque profundo -->
-    <color name="primary_color_dark">#1A3D2A</color>     <!-- Verde oscuro noche -->
-    <color name="primary_soft">#E8F3ED</color>           <!-- Verde suave niebla -->
-    <color name="primary_vibrant">#3FAF63</color>        <!-- Verde vibrante para botones -->
-    <color name="accent_color">#D97D47</color>           <!-- Terracota cálido -->
-    <color name="accent_light">#F4E4D7</color>           <!-- Beige arena -->
-    <color name="accent_vibrant">#FF8C42</color>         <!-- Naranja vibrante para botones secundarios -->
+    <!-- Colores principales - Paleta Verde Sostenible Mejorada -->
+    <color name="primary_color">#388E3C</color>          <!-- Verde principal Material -->
+    <color name="primary_color_dark">#2E7D32</color>     <!-- Verde oscuro -->
+    <color name="primary_soft">#E8F5E9</color>           <!-- Verde muy suave -->
+    <color name="primary_vibrant">#4CAF50</color>        <!-- Verde vibrante para acentos -->
+    <color name="primary_light">#C8E6C9</color>          <!-- Verde claro para fondos -->
+    <color name="accent_color">#66BB6A</color>           <!-- Verde acento secundario -->
+    <color name="accent_light">#A5D6A7</color>           <!-- Verde acento claro -->
+    <color name="accent_vibrant">#81C784</color>         <!-- Verde vibrante suave -->
 
     <!-- Colores secundarios - Paleta natural -->
-    <color name="sky_blue">#7BA8C1</color>              <!-- Azul cielo sereno -->
-    <color name="earth_brown">#8B6F47</color>           <!-- Marrón tierra -->
-    <color name="leaf_green">#5A8A5E</color>            <!-- Verde hoja -->
-    <color name="sunset_orange">#E89B5F</color>         <!-- Naranja atardecer -->
+    <color name="sky_blue">#42A5F5</color>              <!-- Azul cielo Material -->
+    <color name="earth_brown">#8D6E63</color>           <!-- Marrón tierra -->
+    <color name="leaf_green">#66BB6A</color>            <!-- Verde hoja -->
+    <color name="sunset_orange">#FFA726</color>         <!-- Naranja atardecer -->
 
     <!-- Fondos -->
-    <color name="background_home">#F7F9F6</color>       <!-- Gris verdoso muy claro -->
+    <color name="background_home">#F5F5F5</color>       <!-- Gris claro Material -->
     <color name="card_background">#FFFFFF</color>
-    <color name="bottom_nav_background">#FEFEFE</color>
-    <color name="nav_bar_outline">#12000000</color>
-    <color name="surface_elevated">#FCFCFC</color>      <!-- Superficie elevada -->
+    <color name="bottom_nav_background">#FFFFFF</color>
+    <color name="nav_bar_outline">#E0E0E0</color>
+    <color name="surface_elevated">#FAFAFA</color>      <!-- Superficie elevada -->
 
-    <!-- Texto -->
-    <color name="text_primary">#1E3A2B</color>          <!-- Verde oscuro para texto -->
-    <color name="text_secondary">#5F7369</color>        <!-- Verde grisáceo -->
-    <color name="text_hint">#A6B5AD</color>             <!-- Verde claro hint -->
+    <!-- Texto: Mejorado para legibilidad -->
+    <color name="text_primary">#212121</color>          <!-- Negro suave para texto principal -->
+    <color name="text_secondary">#757575</color>        <!-- Gris medio para secundario -->
+    <color name="text_hint">#BDBDBD</color>             <!-- Gris claro hint -->
     <color name="text_on_primary">#FFFFFF</color>       <!-- Texto sobre primario -->
 
     <!-- Indicadores -->
-    <color name="carousel_indicator_inactive">#70FFFFFF</color>
-    <color name="carousel_indicator_active">#FFFFFF</color>
+    <color name="carousel_indicator_inactive">#70388E3C</color>
+    <color name="carousel_indicator_active">#388E3C</color>
 
     <!-- Estados -->
-    <color name="success_green">#4A9D5F</color>         <!-- Verde éxito -->
-    <color name="success_color">#4A9D5F</color>         <!-- Alias para compatibilidad -->
-    <color name="warning_amber">#D9A74A</color>         <!-- Ámbar advertencia -->
-    <color name="error_red">#C75450</color>            <!-- Rojo natural error -->
-    <color name="error_color">#C75450</color>          <!-- Alias para compatibilidad -->
+    <color name="success_green">#4CAF50</color>         <!-- Verde éxito Material -->
+    <color name="success_color">#4CAF50</color>         <!-- Alias para compatibilidad -->
+    <color name="warning_amber">#FFA726</color>         <!-- Ambar advertencia Material -->
+    <color name="error_red">#E53935</color>            <!-- Rojo error Material -->
+    <color name="error_color">#E53935</color>          <!-- Alias para compatibilidad -->
 
     <!-- Detalle de la tarjeta -->
-    <color name="detail_card_start">#E8F3ED</color>     <!-- Verde suave -->
+    <color name="detail_card_start">#E8F5E9</color>     <!-- Verde suave -->
     <color name="detail_card_end">#FFFFFF</color>
-    <color name="card_shadow">#0D2D5F3F</color>         <!-- Sombra sutil verde -->
+    <color name="card_shadow">#0D388E3C</color>         <!-- Sombra sutil verde -->
     
     <!-- Aliases para compatibilidad con nuevas features -->
     <color name="background_color">@color/background_home</color>
@@ -55,10 +56,10 @@
     <!-- Material 3 colors -->
     <color name="primary">@color/primary_color</color>
     <color name="error">@color/error_red</color>
-    <color name="surface_container">@color/surface_elevated</color>
+    <color name="surface_container">#FAFAFA</color>
     <color name="outline_variant">#C8D2CC</color>
-    <color name="tertiary_container">#D9E8F7</color>
-    <color name="on_tertiary_container">#1A3D5C</color>
+    <color name="tertiary_container">#E1F5FE</color>
+    <color name="on_tertiary_container">#01579B</color>
     
     <!-- Icono de la aplicación -->
     <color name="icono_background">@color/primary_color</color>

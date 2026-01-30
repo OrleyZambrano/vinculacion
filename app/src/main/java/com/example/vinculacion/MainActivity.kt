@@ -3,8 +3,10 @@ package com.example.vinculacion
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
@@ -21,7 +23,7 @@ import com.example.vinculacion.ui.routes.MyRoutesFragment
 import kotlinx.coroutines.launch
 
 /**
- * Actividad principal de la aplicación Vinculación
+ * Actividad principal de la aplicación Uleam Naturapp
  * Contiene la navegación personalizada inferior y el contenido principal
  */
 class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, CategoriasFragment.CategoriasInteractions {
@@ -124,6 +126,7 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
             return
         }
         currentDestination = destination
+        updateNavigationColors(destination)
         val fragment = when (destination) {
             Destination.HOME -> HomeFragment.newInstance()
             Destination.CATEGORIES -> CategoriasFragment.newInstance()
@@ -143,6 +146,33 @@ class MainActivity : AppCompatActivity(), HomeFragment.HomeInteractions, Categor
             setReorderingAllowed(true)
             replace(R.id.main_content_container, fragment)
         }
+    }
+
+    private fun updateNavigationColors(activeDestination: Destination) {
+        val activeColor = ContextCompat.getColor(this, android.R.color.holo_green_dark)
+        val inactiveColor = ContextCompat.getColor(this, R.color.text_secondary)
+        
+        // Resetear todos los botones a inactivo
+        setNavigationItemColor(R.id.nav_home_icon, R.id.nav_home_text, inactiveColor)
+        setNavigationItemColor(R.id.nav_categories_icon, R.id.nav_categories_text, inactiveColor)
+        setNavigationItemColor(R.id.nav_tours_icon, R.id.nav_tours_text, inactiveColor)
+        setNavigationItemColor(R.id.nav_map_icon, R.id.nav_map_text, inactiveColor)
+        setNavigationItemColor(R.id.nav_profile_icon, R.id.nav_profile_text, inactiveColor)
+        
+        // Activar el botón correspondiente
+        when (activeDestination) {
+            Destination.HOME -> setNavigationItemColor(R.id.nav_home_icon, R.id.nav_home_text, activeColor)
+            Destination.CATEGORIES -> setNavigationItemColor(R.id.nav_categories_icon, R.id.nav_categories_text, activeColor)
+            Destination.TOURS -> setNavigationItemColor(R.id.nav_tours_icon, R.id.nav_tours_text, activeColor)
+            Destination.MAP -> setNavigationItemColor(R.id.nav_map_icon, R.id.nav_map_text, activeColor)
+            Destination.PROFILE -> setNavigationItemColor(R.id.nav_profile_icon, R.id.nav_profile_text, activeColor)
+            else -> {}
+        }
+    }
+    
+    private fun setNavigationItemColor(iconId: Int, textId: Int, color: Int) {
+        findViewById<ImageView>(iconId)?.setColorFilter(color)
+        findViewById<TextView>(textId)?.setTextColor(color)
     }
 
     override fun openCategories() {

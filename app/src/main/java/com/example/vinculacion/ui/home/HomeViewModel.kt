@@ -30,6 +30,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _homeState = MutableStateFlow<UiState<HomeUiData>>(UiState.Loading)
     val homeState: StateFlow<UiState<HomeUiData>> = _homeState
 
+    private var isLoadingWeather = false
+    private var lastWeatherLoadTime = 0L
+    private val weatherLoadDebounceMs = 2000L // 2 segundos entre cargas
+
     private val quickActions by lazy {
         listOf(
             HomeQuickAction(
@@ -79,7 +83,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadWeather() {
+        val now = System.currentTimeMillis()
+        
+        // Evitar múltiples llamadas en poco tiempo
+        if (isLoadingWeather) {
+            Log.d(TAG, "Weather load already in progress, skipping")
+            return
+        }
+        
+        if ((now - lastWeatherLoadTime) < weatherLoadDebounceMs) {
+            Log.d(TAG, "Weather loaded recently, skipping (${now - lastWeatherLoadTime}ms ago)")
+            return
+        }
+
         viewModelScope.launch {
+            isLoadingWeather = true
+            lastWeatherLoadTime = now
             Log.d(TAG, "loadWeather started")
             _weatherState.value = UiState.Loading
             
@@ -89,10 +108,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 _weatherState.value = UiState.Error(
                     locationResult.exceptionOrNull() ?: Exception("Error obteniendo ubicación")
                 )
+                isLoadingWeather = false
                 return@launch
             }
 
-            val location = locationResult.getOrNull() ?: return@launch
+            val location = locationResult.getOrNull()
+            if (location == null) {
+                isLoadingWeather = false
+                return@launch
+            }
+            
             val weatherResult = weatherRepository.getCurrentWeather(location)
             
             _weatherState.value = if (weatherResult.isSuccess) {
@@ -102,6 +127,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e(TAG, "loadWeather weather failed", weatherResult.exceptionOrNull())
                 UiState.Error(weatherResult.exceptionOrNull() ?: Exception("Error obteniendo clima"))
             }
+            
+            isLoadingWeather = false
         }
     }
 

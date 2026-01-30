@@ -48,18 +48,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_medium"
-                    app:cardBackgroundColor="@color/surface_container"
+                    app:cardBackgroundColor="@color/primary_soft"
                     app:cardCornerRadius="@dimen/card_corner_radius_medium"
-                    app:cardElevation="@dimen/card_elevation"
-                    app:strokeColor="@color/outline_variant"
-                    app:strokeWidth="1dp">
+                    app:cardElevation="3dp"
+                    app:strokeColor="@color/primary_color"
+                    app:strokeWidth="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingVertical="10dp"
-                    android:paddingHorizontal="12dp">
+                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="16dp">
 
                     <!-- Progress -->
                     <ProgressBar
@@ -120,7 +120,7 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                        <!-- Fila principal con toda la info -->
+                        <!-- Fila principal con icono y info -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -130,22 +130,33 @@
                             <!-- Icono del clima -->
                             <ImageView
                                 android:id="@+id/weatherIcon"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
                                 android:contentDescription="@string/weather_icon_description"
                                 android:scaleType="fitCenter" />
 
-                            <!-- Info de temperatura y descripción -->
+                            <!-- Info de clima -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginStart="16dp"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
+                                <!-- Título "Clima Actual" -->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Clima Actual"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                                    android:textColor="@color/text_primary"
+                                    android:textStyle="bold" />
+
+                                <!-- Temperatura y descripción -->
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
@@ -153,120 +164,42 @@
                                         android:id="@+id/weatherTemperature"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                                        android:text="25°C"
+                                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                                         android:textColor="@color/text_primary" />
 
                                     <TextView
                                         android:id="@+id/weatherDescription"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="8dp"
-                                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                        android:textColor="@color/text_secondary" />
+                                        android:layout_marginStart="6dp"
+                                        android:text="Tarde cálida"
+                                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                        android:textColor="@color/text_primary" />
                                 </LinearLayout>
 
+                                <!-- Mensaje de actividad de aves -->
                                 <TextView
-                                    android:id="@+id/weatherLocation"
+                                    android:id="@+id/weatherBirdActivity"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
-                                    android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                                    android:textColor="@color/text_secondary"
-                                    android:drawablePadding="3dp"
-                                    android:drawableStart="@drawable/ic_location"
-                                    android:drawableTint="@color/text_secondary" />
+                                    android:layout_marginTop="4dp"
+                                    android:text="Buen momento para tours"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                    android:textColor="#4CAF50" />
+
                             </LinearLayout>
 
                             <!-- Botón de refresh -->
                             <ImageButton
                                 android:id="@+id/weatherRefreshButton"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/weather_refresh"
                                 android:src="@drawable/ic_refresh"
-                                android:padding="6dp"
+                                android:padding="8dp"
                                 app:tint="@color/text_secondary" />
-                        </LinearLayout>
-
-                        <!-- Details Grid (Compacto) -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="@color/surface_elevated"
-                            android:paddingVertical="6dp"
-                            android:paddingHorizontal="10dp"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <!-- Humedad -->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="💧"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:id="@+id/weatherHumidity"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/text_primary" />
-                            </LinearLayout>
-
-                            <!-- Viento -->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:layout_marginEnd="12dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="💨"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:id="@+id/weatherWind"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/text_primary" />
-                            </LinearLayout>
-
-                            <!-- Bird Activity -->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="🐦"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:id="@+id/weatherBirdActivity"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/text_primary" />
-                            </LinearLayout>
                         </LinearLayout>
 
                     </LinearLayout>
@@ -506,9 +439,11 @@
                             android:fontFamily="sans-serif-medium"/>
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:src="@drawable/ic_bird"
+                            android:elevation="3dp"
+                            android:padding="2dp"
                             app:tint="@color/primary_vibrant"
                             android:contentDescription="Consejos"/>
 
