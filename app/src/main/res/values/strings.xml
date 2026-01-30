@@ -1,10 +1,10 @@
 <resources>
     <!-- Aplicación -->
-    <string name="app_name">Uleam Naturapp</string>
+    <string name="app_name">UleamNatur</string>
     <string name="splash_tagline">Explora la naturaleza</string>
 
     <!-- Pantalla principal -->
-    <string name="welcome_title">¡Bienvenido a Uleam Naturapp!</string>
+    <string name="welcome_title">¡Bienvenido a UleamNatur!</string>
     <string name="welcome_subtitle">Conectando universidades con la comunidad</string>
     <string name="home_content">Contenido del home aquí</string>
 
@@ -333,7 +333,7 @@
     
     <!-- Location Permissions -->
     <string name="location_permission_title">Ubicación para clima</string>
-    <string name="location_permission_message">Uleam Naturapp usa tu ubicación para mostrarte:\n\n🌤️ Clima en tiempo real\n🐦 Condiciones ideales para observar aves\n📍 Contexto de tu zona de exploración\n\nNo compartimos tu ubicación con terceros.</string>
+    <string name="location_permission_message">UleamNatur usa tu ubicación para mostrarte:\n\n🌤️ Clima en tiempo real\n🐦 Condiciones ideales para observar aves\n📍 Contexto de tu zona de exploración\n\nNo compartimos tu ubicación con terceros.</string>
     <string name="location_permission_allow">Permitir</string>
     <string name="location_permission_deny">Ahora no</string>
     <string name="location_permission_initial_message">Activa la ubicación para ver el clima y condiciones de observación</string>
